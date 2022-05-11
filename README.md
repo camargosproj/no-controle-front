@@ -1,6 +1,6 @@
 # No controle!
 
-Controle sua financeira de forma simples e rápida.
+Controle sua vida financeira de forma simples e rápida.
 
 ## Projeto em desenvolvimento
 
