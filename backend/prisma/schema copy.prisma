@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 String               @id @default(uuid())
+  name               String
+  email              String
+  password           String
+  accounts           Account[]
+  // sharedAccountGroups AccountGroup[]
+  SharedAccountGroup SharedAccountGroup[]
+}
+
+model Account {
+  id             String        @id @default(uuid())
+  name           String
+  type           String
+  value          Float
+  dueDate        DateTime
+  category       Category      @relation(fields: [categoryId], references: [id])
+  categoryId     String
+  user           User          @relation(fields: [userId], references: [id])
+  userId         String
+  accountGroup   AccountGroup? @relation(fields: [accountGroupId], references: [id])
+  accountGroupId String?
+  // sharedAccounts SharedAccountGroup[]
+}
+
+model AccountGroup {
+  id             String               @id @default(uuid())
+  name           String
+  description    String
+  totalAmmout    Float                @default(0)
+  accounts       Account[]
+  // sharedWith     User[]
+  sharedAccounts SharedAccountGroup[]
+}
+
+model SharedAccountGroup {
+  id             String       @id @default(uuid())
+  accountGroup   AccountGroup @relation(fields: [accountGroupId], references: [id])
+  accountGroupId String
+  user           User         @relation(fields: [userId], references: [id])
+  userId         String
+  // Account        Account?     @relation(fields: [accountId], references: [id])
+  // accountId      String?
+}
+
+model Category {
+  id      String    @id @default(uuid())
+  name    String
+  type    String
+  Account Account[]
+}

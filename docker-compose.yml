@@ -1,0 +1,12 @@
+ mysql:
+    image: mysql
+    environment:
+            MYSQL_ROOT_PASSWORD: 12345678  
+            MYSQL_DATABASE: nocontrole  
+            MYSQL_USER: nocontrole  
+            MYSQL_PASSWORD: 12345678 
+    restart: always
+    volumes:
+        - ./database:/var/lib/mysql
+    ports:
+        - "3306:3306"
