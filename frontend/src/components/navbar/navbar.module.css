@@ -1,0 +1,67 @@
+.navbar {
+    height: 50px;
+    border-bottom: 0.5px solid #e6e3e3;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: var(--font-color);
+}
+.navbar .container {
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.navbar .container .searchContainer {
+    display: flex;
+    align-items: center;
+    border: 0.5px solid #e6e3e3;
+    padding: 3px;
+}
+.navbar .container .searchContainer input {
+    border: none;
+    outline: none;
+    background: transparent;
+}
+.navbar .container .searchContainer input::placeholder {
+    color: #999;
+    font-size: 0.8rem;
+}
+.navbar .container .rightContainer {
+    display: flex;
+    align-items: center;
+}
+.navbar .container .rightContainer .item {
+    display: flex;
+    align-items: center;
+    margin-right: 1rem;
+    position: relative;
+}
+.navbar .container .rightContainer .item .icon {
+    font-size: 1.2rem;
+    margin-right: 0.3rem;
+}
+.navbar .container .rightContainer .item .darkIcon, .navbar .container .rightContainer .item .notification-icon {
+    cursor: pointer;
+}
+.navbar .container .rightContainer .item .profileImage {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+.navbar .container .rightContainer .item .notificationCounter {
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 50%;
+    background: red;
+    color: white;
+    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    position: absolute;
+    top: 4px;
+    left: 8px;
+}

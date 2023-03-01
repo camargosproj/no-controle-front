@@ -1,5 +1,5 @@
 import * as express from "express";
-import * as bodyParser from "body-parser";
+import * as expressMonitor from "express-status-monitor";
 
 class App {
   public app: express.Application;
@@ -12,6 +12,7 @@ class App {
 
   private initializeMiddlewares() {
     this.app.use(express.json());
+    this.app.use(expressMonitor());
   }
 
   private initializeControllers(controllers) {

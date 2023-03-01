@@ -1,65 +1,64 @@
-import {Link} from 'react-router-dom';
 
 // Styles
-import './SideBar.scss';
+import styles from "./sidebar.module.css";
+
 
 // Third-party libraries
-import React from 'react';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import PaidIcon from '@mui/icons-material/Paid';
 import AddCardIcon from '@mui/icons-material/AddCard';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import SavingsIcon from '@mui/icons-material/Savings';
-
+import Link from 'next/link';
 
 
 
 
 const SideBar = () => {
-    return ( 
-        <div className="sidebar">
-            <div className="sidebar-logo-container">
-                <Link to="/">
+    return (
+        <div className={styles.sidebar}>
+            <div className={styles.sidebarLogoContainer}>
+                <Link href="/">
                     <span className='logo'>NO CONTROLE</span>
                 </Link>
             </div>
-            <div className="sidebar-links-container">
+            <div className={styles.sidebarLinksContainer}>
                 <ul>
-                    <p className='title'>MAIN</p>
+                    <p className={styles.title}>MAIN</p>
                     <li>
-                        <DashboardIcon className='icon'/>
+                        <DashboardIcon className={styles.icon} />
                         <span>Dashboard</span>
                     </li>
-                    <p className='title'>MENU</p>
-                    <Link to="/rendimentos">
+                    <p className={styles.title}>MENU</p>
+                    <Link href="/incomes">
                         <li>
-                            <PaidIcon className="icon" />
+                            <PaidIcon className={styles.icon} />
                             <span>Rendimentos</span>
                         </li>
                     </Link>
-                    <Link to="/despesas">
+                    <Link href="/despesas">
                         <li>
-                            <AddCardIcon className="icon" />
+                            <AddCardIcon className={styles.icon} />
                             <span>Despesas</span>
                         </li>
                     </Link>
-                    <Link to="/contas">
+                    <Link href="/contas">
                         <li>
-                            <SavingsIcon className="icon" />
+                            <SavingsIcon className={styles.icon} />
                             <span>Contas</span>
                         </li>
                     </Link>
                     <p className='title'>Configurações</p>
-                    <Link to="/perfil">
+                    <Link href="/perfil">
                         <li>
-                            <PersonOutlineIcon className="icon" />
+                            <PersonOutlineIcon className={styles.icon} />
                             <span>Perfil</span>
                         </li>
                     </Link>
-                    <Link to="/logout">
+                    <Link href="/logout">
                         <li>
-                            <ExitToAppIcon className="icon" />
+                            <ExitToAppIcon className={styles.icon} />
                             <span>Sair</span>
                         </li>
                     </Link>
@@ -70,5 +69,5 @@ const SideBar = () => {
         </div>
     );
 }
- 
+
 export default SideBar;
