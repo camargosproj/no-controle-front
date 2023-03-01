@@ -1,8 +1,21 @@
 version: '3'
 
 services:
-  mysql:
+  backend:
+      build: ./backend   
+      container_name: backend-nocontrole   
+      ports:
+        - '4000:4000'
+      volumes:
+        - backend:/app
+        - /app/node_modules
+      depends_on:
+        - nocontrole_mysql_database 
+      networks:
+        - nocontrole-network
+  nocontrole_mysql_database:
     image: mysql
+    container_name: nocontrole_database
     environment:
         MYSQL_ROOT_PASSWORD: 12345678  
         MYSQL_DATABASE: nocontrole  
@@ -13,6 +26,9 @@ services:
         - ./database:/var/lib/mysql
     ports:
         - "3306:3306"
+    networks:
+        - nocontrole-network
+
   app-frontend:
     build:
       context: ./frontend
@@ -20,7 +36,38 @@ services:
     image: next-app
     container_name: next-app
     volumes:
-      - ./frontend:/app
+      - frontend:/app
       - /app/node_modules
     ports:
       - "3000:3000"
+    networks:
+        - nocontrole-network
+  studio:
+    build:
+        context: ./backend
+    container_name: prisma_studio
+    command: bash -c "npx prisma studio"
+    ports:
+       - '5555:5555'
+    depends_on:
+        - nocontrole_mysql_database
+        - backend
+    networks:
+        - nocontrole-network
+  migration:
+    build:
+        context: ./backend
+    command: bash -c "npx prisma migrate dev && yarn seed"
+    depends_on:
+        - nocontrole_mysql_database
+    networks:
+        - nocontrole-network
+
+volumes:
+  backend:
+  frontend:
+  database:
+
+networks:
+  nocontrole-network:
+    driver: bridge
