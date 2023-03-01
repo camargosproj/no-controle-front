@@ -11,7 +11,7 @@
     "seed": "ts-node prisma/seed.ts"
   },
   "scripts": {
-    "dev": "nodemon",
+    "dev": "ts-node-dev src/server.ts",
     "seed": "ts-node prisma/seed.ts"
   },
   "devDependencies": {
