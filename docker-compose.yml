@@ -1,12 +1,26 @@
- mysql:
+version: '3'
+
+services:
+  mysql:
     image: mysql
     environment:
-            MYSQL_ROOT_PASSWORD: 12345678  
-            MYSQL_DATABASE: nocontrole  
-            MYSQL_USER: nocontrole  
-            MYSQL_PASSWORD: 12345678 
+        MYSQL_ROOT_PASSWORD: 12345678  
+        MYSQL_DATABASE: nocontrole  
+        MYSQL_USER: nocontrole  
+        MYSQL_PASSWORD: 12345678 
     restart: always
     volumes:
         - ./database:/var/lib/mysql
     ports:
         - "3306:3306"
+  app-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: next-app
+    container_name: next-app
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
