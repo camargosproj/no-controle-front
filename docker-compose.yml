@@ -7,7 +7,7 @@ services:
       ports:
         - '4000:4000'
       volumes:
-        - backend:/app
+        - ./backend:/app
         - /app/node_modules
       depends_on:
         - nocontrole_mysql_database 
@@ -36,7 +36,7 @@ services:
     image: next-app
     container_name: next-app
     volumes:
-      - frontend:/app
+      - ./frontend:/app
       - /app/node_modules
     ports:
       - "3000:3000"
@@ -63,10 +63,6 @@ services:
     networks:
         - nocontrole-network
 
-volumes:
-  backend:
-  frontend:
-  database:
 
 networks:
   nocontrole-network:
