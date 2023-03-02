@@ -4,7 +4,7 @@ import Widget from "../../components/widget/Widget";
 import Chart from "../../components/chart/Chart";
 import Featured from "../../components/featured/Featured";
 
-import styles from '@/styles/Home.module.css'
+import styles from './home.module.css'
 
 
 
