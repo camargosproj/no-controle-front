@@ -1,4 +1,4 @@
-.widget {
+.widget, .AddIconContainer {
     display: flex;
     justify-content: space-between;
     flex: 1;
@@ -47,6 +47,15 @@
     color: #15637b;
     background-color: var(--font-color);
 }
-.widget .left a, .widget .right a {
+.widget .left a, .widget .right a, .AddIcon {
     color: var(--font-color);
+}
+.AddIconContainer {
+    align-items: center;
+    justify-content: center;
+} 
+
+.AddIcon {
+    font-size: 5em;
+    cursor: pointer;
 }

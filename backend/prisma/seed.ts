@@ -27,7 +27,7 @@ async function main() {
         name: "Moradia",
         type: "Despesas",
       },
-      { name: "Trasnporte", type: "Despesas" },
+      { name: "Transporte", type: "Despesas" },
       { name: "Trabalho Fixo", type: "Receitas" },
       { name: "FreeLancer", type: "Receitas" },
       { name: "Governo", type: "Receitas" },

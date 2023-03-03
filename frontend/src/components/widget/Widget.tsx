@@ -65,7 +65,7 @@ const Widget = ({ type, data }: WidgetData) => {
         <div className={styles.widget}>
             <div className={styles.left}>
                 <span className={styles.title}>{data.description}</span>
-                <span className="counter">{Number(data.amount).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</span>
+                <span className={styles.counter}>{Number(data.amount).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</span>
                 <Link href={data.link as string}>
                     <span className={styles.link}>Ver mais</span>
                 </Link>
