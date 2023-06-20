@@ -4,21 +4,14 @@ async function main() {
   await prisma.user.createMany({
     data: [
       {
-        email: "marcoscamargo@outlook.com",
-        name: "Marcos Camargo",
-        password: "12345678",
-      },
-
-      {
-        email: "mellinocamargo@live.com",
-        name: "Leticia Camargo",
+        email: "dev@dev.com",
+        name: "dev",
         password: "12345678",
       },
     ],
     skipDuplicates: true,
   });
 
-  // return;
   await prisma.category.createMany({
     data: [
       { name: "Lazer", type: "Despesas" },
@@ -34,30 +27,6 @@ async function main() {
     ],
     skipDuplicates: true,
   });
-
-  // await prisma.family.create({
-  //   data: {
-  //     name: "Familia Camargo",
-  //     users: {
-  //       createMany: {
-  //         data: [
-  //           {
-  //             email: "marcoscamargo@outlook.com",
-  //             name: "Marcos Camargo",
-  //             password: "12345678",
-  //           },
-
-  //           {
-  //             email: "mellinocamargo@live.com",
-  //             name: "Leticia Camargo",
-  //             password: "12345678",
-  //           },
-  //         ],
-  //         skipDuplicates: true,
-  //       },
-  //     },
-  //   },
-  // });
 }
 main()
   .then(async () => {

@@ -1,22 +1,22 @@
-import { Response, Request, Router } from "express";
-import { Income } from "./incomes.interface";
-import IncomeService from "./income.service";
+import { Request, Response, Router } from "express";
+import { Expense } from "./expense.interface";
+import ExpenseService from "./expense.service";
 import { IController } from "../@core/interfaces";
 
-export default class IncomesController implements IController {
-  public path = "/incomes";
+export default class ExpenseController implements IController {
+  public path = "/expense";
   public router = Router();
-  private incomeService: IncomeService;
+  private expenseService: ExpenseService;
 
-  constructor(incomeService: IncomeService) {
-    this.incomeService = incomeService;
+  constructor(expenseService: ExpenseService) {
+    this.expenseService = expenseService;
     this.initializeRoutes();
   }
 
   public initializeRoutes() {
     this.router.get(this.path, this.findAll);
     this.router.post(this.path, this.create);
-    // this.router.get(this.path + "/by-group", this.getAllincomesByGroups);
+    // this.router.get(this.path + "/by-group", this.getAllExpensesByGroups);
     // this.router.get(
     //   this.path + "/sharedgroups",
     //   this.getAllSharedGroupAccounts
@@ -24,10 +24,20 @@ export default class IncomesController implements IController {
     // this.router.post(this.path + "/groupaccounts", this.createGroupAccount);
   }
 
+  findAll = async (req: Request, res: Response) => {
+    const data = await this.expenseService.findAll();
+
+    res.send(data);
+  };
+
+  findOne(req: Request, res: Response, id: string): Promise<any> {
+    throw new Error("Method not implemented.");
+  }
+
   create = async (req: Request, res: Response) => {
     try {
-      const income: Income = req.body;
-      let data = await this.incomeService.create(income);
+      const expense: Expense = req.body;
+      let data = await this.expenseService.create(expense);
 
       res.send(data);
     } catch (e) {
@@ -38,16 +48,6 @@ export default class IncomesController implements IController {
       return;
     }
   };
-
-  findAll = async (req: Request, res: Response) => {
-    let data = await this.incomeService.findAll();
-
-    res.send(data);
-  };
-
-  findOne(req: Request, res: Response, id: string): Promise<any> {
-    throw new Error("Method not implemented.");
-  }
   update(req: Request, res: Response, id: string): Promise<void> {
     throw new Error("Method not implemented.");
   }
@@ -55,10 +55,13 @@ export default class IncomesController implements IController {
     throw new Error("Method not implemented.");
   }
 
-  // getAllincomesByGroups = async (req: Request, res: Response) => {
+  // getAllExpensesByGroups = async (
+  //   request: Request,
+  //   response: Response
+  // ) => {
   //   let data = await prismaClient.accountGroup.findMany({
   //     where: {
-  //       Income: {
+  //       Expense: {
   //         some: {
   //           id: {
   //             not: undefined,
@@ -66,19 +69,21 @@ export default class IncomesController implements IController {
   //         },
   //       },
   //     },
-
   //     include: {
-  //       Income: true,
+  //       Expense: true,
   //     },
   //   });
 
   //   response.send(data);
   // };
 
-  // getAllSharedGroupAccounts = async (request: Request, response: Response) => {
+  // getAllSharedGroupAccounts = async (
+  //   request: Request,
+  //   response: Response
+  // ) => {
   //   let data = await prismaClient.sharedAccountGroup.findMany({
   //     where: {
-  //       Income: {
+  //       Expense: {
   //         some: {
   //           id: {
   //             not: undefined,
@@ -90,7 +95,7 @@ export default class IncomesController implements IController {
   //       sharedWith: true,
   //       accountGroup: {
   //         include: {
-  //           Income: true,
+  //           Expense: true,
   //           groupOwner: true,
   //         },
   //       },
@@ -100,7 +105,10 @@ export default class IncomesController implements IController {
   //   response.send(data);
   // };
 
-  // createGroupAccount = async (request: Request, response: Response) => {
+  // createGroupAccount = async (
+  //   request: Request,
+  //   response: Response
+  // ) => {
   //   const accountGroup: AccountGroup = request.body;
   //   let data = await prismaClient.accountGroup.create({
   //     data: accountGroup,
