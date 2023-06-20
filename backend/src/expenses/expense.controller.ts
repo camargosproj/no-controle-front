@@ -1,7 +1,7 @@
 import { Request, Response, Router } from "express";
 import { Expense } from "./expense.interface";
 import ExpenseService from "./expense.service";
-import { IController } from "../@core/interfaces";
+import { IController } from "../core/interfaces";
 
 export default class ExpenseController implements IController {
   public path = "/expense";

@@ -1,5 +1,5 @@
-import { IService } from "../@core/interfaces";
-import { PrismaService } from "../@core/shared";
+import { IService } from "../core/interfaces";
+import { PrismaService } from "../core/shared";
 import { Expense } from "./expense.interface";
 
 export default class ExpenseService implements IService {

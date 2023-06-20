@@ -1,6 +1,6 @@
 import * as express from "express";
 import * as expressMonitor from "express-status-monitor";
-import { IController } from "./@core/interfaces";
+import { IController } from "./core/interfaces";
 
 class App {
   public app: express.Application;
@@ -27,7 +27,7 @@ class App {
   }
 
   public listen() {
-    this.app.listen(process.env.PORT || 3000, () => {
+    return this.app.listen(process.env.PORT || 3000, () => {
       console.log(`-- App listening on the port ${process.env.PORT}`);
     });
   }

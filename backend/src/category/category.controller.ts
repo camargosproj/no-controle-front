@@ -2,7 +2,7 @@ import { Request, Response, Router } from "express";
 import CategoryService from "./category.service";
 import { ParamsDictionary } from "express-serve-static-core";
 import { ParsedQs } from "qs";
-import { IController } from "../@core/interfaces";
+import { IController } from "../core/interfaces";
 
 export default class CategoryController implements IController {
   path: string = "/category";

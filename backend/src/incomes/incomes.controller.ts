@@ -1,7 +1,7 @@
 import { Response, Request, Router } from "express";
 import { Income } from "./incomes.interface";
 import IncomeService from "./income.service";
-import { IController } from "../@core/interfaces";
+import { IController } from "../core/interfaces";
 
 export default class IncomesController implements IController {
   public path = "/incomes";
