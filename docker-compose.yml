@@ -54,14 +54,14 @@ services:
         - backend
     networks:
         - nocontrole-network
-  migration:
-    build:
-        context: ./backend
-    command: bash -c "npx prisma migrate dev && yarn seed"
-    depends_on:
-        - nocontrole_mysql_database
-    networks:
-        - nocontrole-network
+  # migration:
+  #   build:
+  #       context: ./backend
+  #   command: bash -c "npx prisma migrate dev && yarn seed"
+  #   depends_on:
+  #       - nocontrole_mysql_database
+  #   networks:
+  #       - nocontrole-network
 
 
 networks:
