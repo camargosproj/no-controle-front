@@ -26,22 +26,19 @@ export default class AppController implements IController {
   };
   findOne(
     req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>,
-    res: Response<any, Record<string, any>>,
-    id: string
+    res: Response<any, Record<string, any>>
   ): Promise<any> {
     throw new Error("Method not implemented.");
   }
   update(
     req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>,
-    res: Response<any, Record<string, any>>,
-    id: string
+    res: Response<any, Record<string, any>>
   ): Promise<void> {
     throw new Error("Method not implemented.");
   }
   delete(
     req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>,
-    res: Response<any, Record<string, any>>,
-    id: string
+    res: Response<any, Record<string, any>>
   ): void {
     throw new Error("Method not implemented.");
   }

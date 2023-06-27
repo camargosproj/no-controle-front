@@ -6,7 +6,7 @@ export interface IController {
   initializeRoutes(): void;
   create(req: Request, res: Response): void;
   findAll(req: Request, res: Response);
-  findOne(req: Request, res: Response, id: string): Promise<any | null>;
-  update(req: Request, res: Response, id: string): Promise<void>;
-  delete(req: Request, res: Response, id: string): void;
+  findOne(req: any, res: any);
+  update(req: Request, res: Response);
+  delete(req: Request, res: Response): void;
 }

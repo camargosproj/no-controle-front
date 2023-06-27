@@ -11,6 +11,7 @@ services:
         - /app/node_modules
       depends_on:
         - nocontrole_mysql_database 
+        - studio
       networks:
         - nocontrole-network
   nocontrole_mysql_database:
@@ -46,12 +47,14 @@ services:
     build:
         context: ./backend
     container_name: prisma_studio
-    command: bash -c "npx prisma studio"
+    command: bash -c "npx prisma generate && npx prisma studio"
+    volumes:
+        - ./backend:/app
+        - /app/node_modules
     ports:
        - '5555:5555'
     depends_on:
         - nocontrole_mysql_database
-        - backend
     networks:
         - nocontrole-network
   # migration:

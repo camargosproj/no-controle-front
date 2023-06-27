@@ -13,15 +13,11 @@ export default class IncomesController implements IController {
     this.initializeRoutes();
   }
 
-  public initializeRoutes() {
+  initializeRoutes(): void {
     this.router.get(this.path, this.findAll);
-    this.router.post(this.path, this.create);
-    // this.router.get(this.path + "/by-group", this.getAllincomesByGroups);
-    // this.router.get(
-    //   this.path + "/sharedgroups",
-    //   this.getAllSharedGroupAccounts
-    // );
-    // this.router.post(this.path + "/groupaccounts", this.createGroupAccount);
+    this.router.get(this.path + "/:id", this.findOne);
+    this.router.put(this.path + "/:id", this.update);
+    this.router.delete(this.path + "/:id", this.delete);
   }
 
   create = async (req: Request, res: Response) => {
@@ -45,66 +41,13 @@ export default class IncomesController implements IController {
     res.send(data);
   };
 
-  findOne(req: Request, res: Response, id: string): Promise<any> {
+  findOne(id: string): Promise<any> {
     throw new Error("Method not implemented.");
   }
-  update(req: Request, res: Response, id: string): Promise<void> {
+  update(): Promise<void> {
     throw new Error("Method not implemented.");
   }
-  delete(req: Request, res: Response, id: string): void {
+  delete(): void {
     throw new Error("Method not implemented.");
   }
-
-  // getAllincomesByGroups = async (req: Request, res: Response) => {
-  //   let data = await prismaClient.accountGroup.findMany({
-  //     where: {
-  //       Income: {
-  //         some: {
-  //           id: {
-  //             not: undefined,
-  //           },
-  //         },
-  //       },
-  //     },
-
-  //     include: {
-  //       Income: true,
-  //     },
-  //   });
-
-  //   response.send(data);
-  // };
-
-  // getAllSharedGroupAccounts = async (request: Request, response: Response) => {
-  //   let data = await prismaClient.sharedAccountGroup.findMany({
-  //     where: {
-  //       Income: {
-  //         some: {
-  //           id: {
-  //             not: undefined,
-  //           },
-  //         },
-  //       },
-  //     },
-  //     include: {
-  //       sharedWith: true,
-  //       accountGroup: {
-  //         include: {
-  //           Income: true,
-  //           groupOwner: true,
-  //         },
-  //       },
-  //     },
-  //   });
-
-  //   response.send(data);
-  // };
-
-  // createGroupAccount = async (request: Request, response: Response) => {
-  //   const accountGroup: AccountGroup = request.body;
-  //   let data = await prismaClient.accountGroup.create({
-  //     data: accountGroup,
-  //   });
-  //   response.send(data);
-  // };
 }

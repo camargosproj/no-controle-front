@@ -13,25 +13,11 @@ export default class ExpenseController implements IController {
     this.initializeRoutes();
   }
 
-  public initializeRoutes() {
+  initializeRoutes(): void {
     this.router.get(this.path, this.findAll);
-    this.router.post(this.path, this.create);
-    // this.router.get(this.path + "/by-group", this.getAllExpensesByGroups);
-    // this.router.get(
-    //   this.path + "/sharedgroups",
-    //   this.getAllSharedGroupAccounts
-    // );
-    // this.router.post(this.path + "/groupaccounts", this.createGroupAccount);
-  }
-
-  findAll = async (req: Request, res: Response) => {
-    const data = await this.expenseService.findAll();
-
-    res.send(data);
-  };
-
-  findOne(req: Request, res: Response, id: string): Promise<any> {
-    throw new Error("Method not implemented.");
+    this.router.get(this.path + "/:id", this.findOne);
+    this.router.put(this.path + "/:id", this.update);
+    this.router.delete(this.path + "/:id", this.delete);
   }
 
   create = async (req: Request, res: Response) => {
@@ -48,71 +34,21 @@ export default class ExpenseController implements IController {
       return;
     }
   };
-  update(req: Request, res: Response, id: string): Promise<void> {
+
+  findAll = async (req: Request, res: Response) => {
+    const data = await this.expenseService.findAll();
+
+    res.send(data);
+  };
+
+  findOne = async (req: Request, res: Response): Promise<any> => {
     throw new Error("Method not implemented.");
-  }
-  delete(req: Request, res: Response, id: string): void {
+  };
+
+  update = async (req: Request, res: Response): Promise<void> => {
     throw new Error("Method not implemented.");
-  }
-
-  // getAllExpensesByGroups = async (
-  //   request: Request,
-  //   response: Response
-  // ) => {
-  //   let data = await prismaClient.accountGroup.findMany({
-  //     where: {
-  //       Expense: {
-  //         some: {
-  //           id: {
-  //             not: undefined,
-  //           },
-  //         },
-  //       },
-  //     },
-  //     include: {
-  //       Expense: true,
-  //     },
-  //   });
-
-  //   response.send(data);
-  // };
-
-  // getAllSharedGroupAccounts = async (
-  //   request: Request,
-  //   response: Response
-  // ) => {
-  //   let data = await prismaClient.sharedAccountGroup.findMany({
-  //     where: {
-  //       Expense: {
-  //         some: {
-  //           id: {
-  //             not: undefined,
-  //           },
-  //         },
-  //       },
-  //     },
-  //     include: {
-  //       sharedWith: true,
-  //       accountGroup: {
-  //         include: {
-  //           Expense: true,
-  //           groupOwner: true,
-  //         },
-  //       },
-  //     },
-  //   });
-
-  //   response.send(data);
-  // };
-
-  // createGroupAccount = async (
-  //   request: Request,
-  //   response: Response
-  // ) => {
-  //   const accountGroup: AccountGroup = request.body;
-  //   let data = await prismaClient.accountGroup.create({
-  //     data: accountGroup,
-  //   });
-  //   response.send(data);
-  // };
+  };
+  delete = async (req: Request, res: Response): Promise<void> => {
+    throw new Error("Method not implemented.");
+  };
 }

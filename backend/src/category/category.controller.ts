@@ -13,28 +13,50 @@ export default class CategoryController implements IController {
     this.categoryService = categoryService;
     this.initializeRoutes();
   }
-  create(
-    req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>,
-    res: Response<any, Record<string, any>>
-  ): void {
-    throw new Error("Method not implemented.");
-  }
+
   initializeRoutes(): void {
     this.router.get(this.path, this.findAll);
+    this.router.get(this.path + "/:id", this.findOne);
+    this.router.put(this.path + "/:id", this.update);
+    this.router.delete(this.path + "/:id", this.delete);
   }
+
+  create = async (
+    req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>,
+    res: Response<any, Record<string, any>>
+  ) => {
+    throw new Error("Method not implemented.");
+  };
 
   findAll = async (req: Request, res: Response) => {
     const data = await this.categoryService.findAll();
     res.json(data);
   };
 
-  findOne(req: Request, res: Response, id: string): Promise<any> {
-    throw new Error("Method not implemented.");
-  }
-  update(req: Request, res: Response, id: string): Promise<void> {
-    throw new Error("Method not implemented.");
-  }
-  delete(req: Request, res: Response, id: string): void {
-    throw new Error("Method not implemented.");
-  }
+  findOne = async (req: Request, res: Response) => {
+    const data = await this.categoryService.findOne(req.params.id);
+    if (!data) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+    res.json(data);
+  };
+
+  update = async (req: Request, res: Response) => {
+    const data: any = await this.categoryService.update(
+      req.params.id,
+      req.body
+    );
+    if (!data) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+    res.json(data);
+  };
+
+  delete = async (req: Request, res: Response) => {
+    const category = await this.categoryService.delete(req.params.id);
+    if (!category) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+    res.status(200).json({ message: "Category deleted" });
+  };
 }
