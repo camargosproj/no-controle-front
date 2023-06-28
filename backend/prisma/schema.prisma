@@ -70,7 +70,7 @@ model AccountGroup {
   id             String               @id @default(uuid())
   name           String
   description    String
-  totalAmmout    Float                @default(0)
+  totalAmount    Float                @default(0)
   Expense        Expense[]
   Income         Income[]
   sharedAccounts SharedAccountGroup[]

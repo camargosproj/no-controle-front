@@ -32,8 +32,6 @@ export default class CategoryController implements IController {
   };
 
   findAll = async (req: Request, res: Response) => {
-    // @ts-ignore
-    console.log(req.decoded);
     const data = await this.categoryService.findAll();
     res.json(data);
   };

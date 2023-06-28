@@ -31,10 +31,10 @@ export default class ExpenseController implements IController {
   };
 
   findAll = async (req: Request, res: Response) => {
-    const userId = null;
+    const { id: userId, email } = req.authUser;
     const { accountGroupId } = req.query;
     const data = await this.expenseService.findAll(
-      userId as string,
+      userId,
       accountGroupId as string
     );
 

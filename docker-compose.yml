@@ -58,14 +58,19 @@ services:
         - nocontrole_mysql_database
     networks:
         - nocontrole-network
-  # migration:
-  #   build:
-  #       context: ./backend
-  #   command: bash -c "npx prisma migrate dev && yarn seed"
-  #   depends_on:
-  #       - nocontrole_mysql_database
-  #   networks:
-  #       - nocontrole-network
+  migration:
+    build:
+        context: ./backend
+    container_name: prisma_migration
+    command: bash -c "npx prisma migrate dev && yarn seed && npx prisma generate"
+    volumes:
+        - ./backend:/app
+        - /app/node_modules
+    depends_on:
+        - nocontrole_mysql_database
+        - backend
+    networks:
+        - nocontrole-network
 
 
 networks:

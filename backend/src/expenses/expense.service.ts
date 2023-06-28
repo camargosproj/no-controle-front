@@ -38,12 +38,14 @@ export default class ExpenseService {
     if (!accountGroupId) {
       return;
     }
-    const group = await this.prisma.accountGroup.findUnique({
+    const totalAmount = await this.updateTotalAmount(accountGroupId);
+
+    const group = await this.prisma.accountGroup.findFirst({
       where: {
         id: accountGroupId,
       },
       select: {
-        totalAmmout: true,
+        totalAmount: true,
       },
     });
 
@@ -51,22 +53,30 @@ export default class ExpenseService {
       throw new NotFoundError("Group not found");
     }
 
-    return group.totalAmmout;
+    return group.totalAmount;
   }
 
   async updateTotalAmount(accountGroupId: string) {
     const totalAmount = await this.prisma.expense.aggregate({
+      where: {
+        accountGroupId,
+      },
       _sum: {
         amount: true,
       },
     });
+
+    if (!totalAmount._sum.amount) {
+      return;
+    }
+
     await this.prisma.$transaction([
       this.prisma.accountGroup.update({
         where: {
           id: accountGroupId,
         },
         data: {
-          totalAmmout: totalAmount._sum.amount,
+          totalAmount: totalAmount._sum.amount,
         },
       }),
     ]);

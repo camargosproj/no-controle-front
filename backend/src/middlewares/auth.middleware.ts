@@ -21,7 +21,7 @@ export const authMiddleware = (
   }
 
   // Pass the decoded token to the next middleware
-  req.decoded = decoded;
+  req.authUser = decoded;
 
   next();
 };
