@@ -1,12 +1,12 @@
-import { Request, Response, Router } from "express";
+import { NextFunction, Request, Response, Router } from "express";
 import CategoryService from "./category.service";
-import { ParamsDictionary } from "express-serve-static-core";
-import { ParsedQs } from "qs";
 import { IController } from "../core/interfaces";
+import { toAsyncRouter } from "../middlewares/error.middleware";
+import { BadRequestError, HttpError } from "../errors/custom-erros";
 
 export default class CategoryController implements IController {
   path: string = "/category";
-  router: Router = Router();
+  router: Router = toAsyncRouter();
   categoryService: CategoryService;
 
   constructor(categoryService: CategoryService) {
@@ -16,15 +16,17 @@ export default class CategoryController implements IController {
 
   initializeRoutes(): void {
     this.router.get(this.path, this.findAll);
+    this.router.post(this.path, this.create);
     this.router.get(this.path + "/:id", this.findOne);
     this.router.put(this.path + "/:id", this.update);
     this.router.delete(this.path + "/:id", this.delete);
   }
 
-  create = async (
-    req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>,
-    res: Response<any, Record<string, any>>
-  ) => {
+  create = async (req: Request, res: Response) => {
+    const { name } = req?.body;
+    if (!name) {
+      throw new BadRequestError("Name is required");
+    }
     throw new Error("Method not implemented.");
   };
 
@@ -33,10 +35,10 @@ export default class CategoryController implements IController {
     res.json(data);
   };
 
-  findOne = async (req: Request, res: Response) => {
+  findOne = async (req: Request, res: Response, next: NextFunction) => {
     const data = await this.categoryService.findOne(req.params.id);
     if (!data) {
-      return res.status(404).json({ message: "Category not found" });
+      throw new HttpError("Category not found", 404);
     }
     res.json(data);
   };

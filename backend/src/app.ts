@@ -1,6 +1,7 @@
 import * as express from "express";
 import * as expressMonitor from "express-status-monitor";
 import { IController } from "./core/interfaces";
+import { errorHandler } from "./middlewares/error.middleware";
 
 class App {
   public app: express.Application;
@@ -11,12 +12,19 @@ class App {
     this.app = express();
     this.initializeMiddlewares();
     this.initializeControllers();
+    this.initializeErrorHandling();
   }
 
   private initializeMiddlewares() {
     console.log("-- Starting middlewares");
+
     this.app.use(express.json());
     this.app.use(expressMonitor());
+  }
+
+  private initializeErrorHandling() {
+    console.log("-- Starting error handling");
+    this.app.use(errorHandler);
   }
 
   private initializeControllers() {

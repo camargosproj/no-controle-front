@@ -2,10 +2,11 @@ import { Response, Request, Router } from "express";
 import { Income } from "./incomes.interface";
 import IncomeService from "./income.service";
 import { IController } from "../core/interfaces";
+import { toAsyncRouter } from "../middlewares/error.middleware";
 
 export default class IncomesController implements IController {
   public path = "/incomes";
-  public router = Router();
+  router: Router = toAsyncRouter();
   private incomeService: IncomeService;
 
   constructor(incomeService: IncomeService) {
@@ -41,13 +42,13 @@ export default class IncomesController implements IController {
     res.send(data);
   };
 
-  findOne(id: string): Promise<any> {
+  findOne(req: Request, res: Response): Promise<any> {
     throw new Error("Method not implemented.");
   }
-  update(): Promise<void> {
+  update(req: Request, res: Response): Promise<void> {
     throw new Error("Method not implemented.");
   }
-  delete(): void {
+  delete(req: Request, res: Response): void {
     throw new Error("Method not implemented.");
   }
 }
