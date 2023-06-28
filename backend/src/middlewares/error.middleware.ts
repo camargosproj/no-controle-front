@@ -39,6 +39,7 @@ export const errorHandler = (
   next: NextFunction
 ) => {
   if (!err.code) {
+    console.log(`-- Error not handled: `, err);
     return res
       .status(500)
       .json({ code: 500, message: "Internal server error" });

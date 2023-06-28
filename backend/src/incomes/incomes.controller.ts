@@ -8,6 +8,7 @@ export default class IncomesController implements IController {
   public path = "/incomes";
   router: Router = toAsyncRouter();
   private incomeService: IncomeService;
+  isPrivate: boolean = true;
 
   constructor(incomeService: IncomeService) {
     this.incomeService = incomeService;
@@ -22,18 +23,10 @@ export default class IncomesController implements IController {
   }
 
   create = async (req: Request, res: Response) => {
-    try {
-      const income: Income = req.body;
-      let data = await this.incomeService.create(income);
+    const income: Income = req.body;
+    let data = await this.incomeService.create(income);
 
-      res.send(data);
-    } catch (e) {
-      console.log(e);
-      res.status(500).json({
-        message: e.message,
-      });
-      return;
-    }
+    res.send(data);
   };
 
   findAll = async (req: Request, res: Response) => {

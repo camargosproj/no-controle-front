@@ -1,15 +1,19 @@
 import { PrismaClient } from "@prisma/client";
+import { hashPassword } from "../src/utils/util";
+
 const prisma = new PrismaClient();
 async function main() {
-  await prisma.user.createMany({
-    data: [
-      {
-        email: "dev@dev.com",
-        name: "dev",
-        password: "12345678",
-      },
-    ],
-    skipDuplicates: true,
+  const hash = await hashPassword("12345678");
+  const user = {
+    email: "dev@dev.com",
+    name: "dev",
+    password: hash,
+  };
+
+  await prisma.user.upsert({
+    where: { email: user.email },
+    create: user,
+    update: user,
   });
 
   await prisma.category.createMany({

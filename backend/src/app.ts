@@ -2,6 +2,8 @@ import * as express from "express";
 import * as expressMonitor from "express-status-monitor";
 import { IController } from "./core/interfaces";
 import { errorHandler } from "./middlewares/error.middleware";
+import { BadRequestError, UnauthorizedError } from "./errors/custom-erros";
+import { authMiddleware } from "./middlewares/auth.middleware";
 
 class App {
   public app: express.Application;
@@ -20,6 +22,9 @@ class App {
 
     this.app.use(express.json());
     this.app.use(expressMonitor());
+    this.initializePublicControllers();
+    // Auth middleware
+    this.app.use(authMiddleware);
   }
 
   private initializeErrorHandling() {
@@ -29,8 +34,19 @@ class App {
 
   private initializeControllers() {
     this.controllers.forEach((controller) => {
-      console.log(`-- Starting controller ${controller.path}`);
-      this.app.use("/", controller.router);
+      if (controller.isPrivate) {
+        console.log(`-- Starting controller ${controller.path}`);
+        this.app.use("/", controller.router);
+      }
+    });
+  }
+
+  private initializePublicControllers() {
+    this.controllers.forEach((controller) => {
+      if (!controller.isPrivate) {
+        console.log(`-- Starting controller ${controller.path}`);
+        this.app.use("/", controller.router);
+      }
     });
   }
 

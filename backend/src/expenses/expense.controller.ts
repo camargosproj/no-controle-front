@@ -8,6 +8,7 @@ export default class ExpenseController implements IController {
   public path = "/expense";
   router: Router = toAsyncRouter();
   private expenseService: ExpenseService;
+  isPrivate: boolean = true;
 
   constructor(expenseService: ExpenseService) {
     this.expenseService = expenseService;

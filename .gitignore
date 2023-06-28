@@ -22,3 +22,4 @@ yarn-error.log*
 local
 database
 .env
+backend/dist

@@ -1,6 +1,5 @@
 import { PrismaService } from "../core/shared";
 import { IService } from "../core/interfaces";
-import { Category } from "@prisma/client";
 
 export default class CategoryService implements IService {
   constructor(private prisma: PrismaService) {}

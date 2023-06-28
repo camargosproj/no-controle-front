@@ -6,6 +6,7 @@ import { IController } from "./core/interfaces";
 export default class AppController implements IController {
   path: string = "/";
   public router = Router();
+  isPrivate: boolean = false;
 
   constructor() {
     this.initializeRoutes();
