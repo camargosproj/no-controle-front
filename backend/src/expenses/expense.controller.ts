@@ -2,10 +2,11 @@ import { Request, Response, Router } from "express";
 import { Expense } from "./expense.interface";
 import ExpenseService from "./expense.service";
 import { IController } from "../core/interfaces";
+import { toAsyncRouter } from "../middlewares/error.middleware";
 
 export default class ExpenseController implements IController {
   public path = "/expense";
-  public router = Router();
+  router: Router = toAsyncRouter();
   private expenseService: ExpenseService;
 
   constructor(expenseService: ExpenseService) {
@@ -14,6 +15,7 @@ export default class ExpenseController implements IController {
   }
 
   initializeRoutes(): void {
+    this.router.post(this.path, this.create);
     this.router.get(this.path, this.findAll);
     this.router.get(this.path + "/:id", this.findOne);
     this.router.put(this.path + "/:id", this.update);
@@ -21,22 +23,19 @@ export default class ExpenseController implements IController {
   }
 
   create = async (req: Request, res: Response) => {
-    try {
-      const expense: Expense = req.body;
-      let data = await this.expenseService.create(expense);
+    const expense: Expense = req.body;
+    let data = await this.expenseService.create(expense);
 
-      res.send(data);
-    } catch (e) {
-      console.log(e);
-      res.status(500).json({
-        message: e.message,
-      });
-      return;
-    }
+    res.json(data);
   };
 
   findAll = async (req: Request, res: Response) => {
-    const data = await this.expenseService.findAll();
+    const userId = null;
+    const { accountGroupId } = req.query;
+    const data = await this.expenseService.findAll(
+      userId as string,
+      accountGroupId as string
+    );
 
     res.send(data);
   };
