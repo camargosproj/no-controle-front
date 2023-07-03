@@ -1,12 +1,9 @@
 import { PrismaService } from "../core/shared";
 import { IService } from "../core/interfaces";
 
-export default class CategoryService implements IService {
+export default class CategoryService {
   constructor(private prisma: PrismaService) {}
 
-  create(): Promise<any> {
-    throw new Error("Method not implemented.");
-  }
   async findAll(): Promise<any[]> {
     const categories = await this.prisma.category.findMany();
     return categories;
