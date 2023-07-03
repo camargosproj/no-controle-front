@@ -34,11 +34,61 @@ export default class ExpenseService {
     return data;
   }
 
+  async findOne(userId: string, id: string) {
+    const expense = await this.prisma.expense.findFirst({
+      where: {
+        id,
+        userId,
+      },
+    });
+
+    if (!expense) {
+      throw new NotFoundError("Expense not found");
+    }
+
+    return expense;
+  }
+
+  async update(userId: string, id: string, data: Expense) {
+    const expense = await this.findOne(userId, id);
+
+    const updatedExpense = await this.prisma.expense.update({
+      where: {
+        id,
+      },
+      data: {
+        ...data,
+        date: new Date(data.date),
+      },
+    });
+
+    if (expense.accountGroupId !== data.accountGroupId) {
+      await this.updateTotalAmount(expense.accountGroupId);
+    }
+    await this.updateTotalAmount(data.accountGroupId);
+
+    return updatedExpense;
+  }
+
+  async delete(userId: string, id: string) {
+    await this.findOne(userId, id);
+
+    const updatedExpense = await this.prisma.expense.delete({
+      where: {
+        id,
+      },
+    });
+
+    await this.updateTotalAmount(updatedExpense.accountGroupId);
+
+    return;
+  }
+
   async getTotalAmount(accountGroupId: string) {
     if (!accountGroupId) {
       return;
     }
-    const totalAmount = await this.updateTotalAmount(accountGroupId);
+    await this.updateTotalAmount(accountGroupId);
 
     const group = await this.prisma.accountGroup.findFirst({
       where: {

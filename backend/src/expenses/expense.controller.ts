@@ -1,4 +1,4 @@
-import { Request, Response, Router } from "express";
+import e, { Request, Response, Router } from "express";
 import { Expense } from "./expense.interface";
 import ExpenseService from "./expense.service";
 import { IController } from "../core/interfaces";
@@ -42,13 +42,26 @@ export default class ExpenseController implements IController {
   };
 
   findOne = async (req: Request, res: Response): Promise<any> => {
-    throw new Error("Method not implemented.");
+    const { id: userId, email } = req.authUser;
+    const { id } = req.params;
+    const data = await this.expenseService.findOne(userId, id);
+
+    res.send(data);
   };
 
-  update = async (req: Request, res: Response): Promise<void> => {
-    throw new Error("Method not implemented.");
+  update = async (req: Request, res: Response): Promise<any> => {
+    const { id: userId, email } = req.authUser;
+    const { id } = req.params;
+    const expense: Expense = req.body;
+    const data = await this.expenseService.update(userId, id, expense);
+
+    res.send(data);
   };
   delete = async (req: Request, res: Response): Promise<void> => {
-    throw new Error("Method not implemented.");
+    const { id: userId, email } = req.authUser;
+    const { id } = req.params;
+    const data = await this.expenseService.delete(userId, id);
+
+    res.send(data);
   };
 }
