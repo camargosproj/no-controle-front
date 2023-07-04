@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response, Router } from "express";
-import { HttpError } from "../errors/custom-erros";
+import { HttpError } from "../errors";
 const METHODS = ["get", "post", "delete", "put", "patch"];
 
 type AsyncHandlerType = (

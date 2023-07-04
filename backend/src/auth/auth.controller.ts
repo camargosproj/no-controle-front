@@ -2,7 +2,7 @@ import { Router, Request, Response, NextFunction } from "express";
 import { IController } from "../core/interfaces";
 import { toAsyncRouter } from "../middlewares/error.middleware";
 import AuthService from "./auth.service";
-import { BadRequestError } from "../errors/custom-erros";
+import { BadRequestError } from "../errors/custom-errors";
 import { authMiddleware } from "../middlewares/auth.middleware";
 
 export default class AuthController implements IController {

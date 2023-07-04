@@ -1,6 +1,6 @@
 import { PrismaService } from "../core/shared";
 import * as jwt from "jsonwebtoken";
-import { UnauthorizedError } from "../errors/custom-erros";
+import { UnauthorizedError } from "../errors/custom-errors";
 import { comparePassword } from "../utils/util";
 
 export default class AuthService {

@@ -2,7 +2,7 @@ import * as express from "express";
 import * as expressMonitor from "express-status-monitor";
 import { IController } from "./core/interfaces";
 import { errorHandler } from "./middlewares/error.middleware";
-import { BadRequestError, UnauthorizedError } from "./errors/custom-erros";
+import { BadRequestError, UnauthorizedError } from "./errors/custom-errors";
 import { authMiddleware } from "./middlewares/auth.middleware";
 
 class App {

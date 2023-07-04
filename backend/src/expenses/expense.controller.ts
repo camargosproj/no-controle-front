@@ -1,4 +1,4 @@
-import e, { Request, Response, Router } from "express";
+import { Request, Response, Router } from "express";
 import { Expense } from "./expense.interface";
 import ExpenseService from "./expense.service";
 import { IController } from "../core/interfaces";
@@ -32,10 +32,10 @@ export default class ExpenseController implements IController {
 
   findAll = async (req: Request, res: Response) => {
     const { id: userId, email } = req.authUser;
-    const { accountGroupId } = req.query;
+    const { transactionGroupId } = req.query;
     const data = await this.expenseService.findAll(
       userId,
-      accountGroupId as string
+      transactionGroupId as string
     );
 
     res.send(data);

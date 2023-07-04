@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { BadRequestError } from "../errors/custom-erros";
+import { BadRequestError } from "../errors";
 import { verifyToken } from "../utils/util";
 
 export const authMiddleware = (

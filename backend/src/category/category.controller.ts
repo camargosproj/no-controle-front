@@ -2,7 +2,7 @@ import { NextFunction, Request, Response, Router } from "express";
 import CategoryService from "./category.service";
 import { IController } from "../core/interfaces";
 import { toAsyncRouter } from "../middlewares/error.middleware";
-import { BadRequestError, HttpError } from "../errors/custom-erros";
+import { BadRequestError, HttpError } from "../errors";
 
 export default class CategoryController implements IController {
   path: string = "/category";
