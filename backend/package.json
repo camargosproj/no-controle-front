@@ -15,7 +15,7 @@
     "dev": "npx prisma generate && nodemon",
     "migrate": "docker-compose up migration && npx prisma generate",
     "seed": "ts-node prisma/seed.ts",
-    "test": "jest --watchAll",
+    "test": "jest --watchAll --runInBand --silent",
     "test:docker": "docker-compose -f ../docker-compose.test.yml up"
   },
   "devDependencies": {
