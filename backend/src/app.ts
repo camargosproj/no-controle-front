@@ -2,9 +2,8 @@ import * as express from "express";
 import * as expressMonitor from "express-status-monitor";
 import { IController } from "./core/interfaces";
 import { errorHandler } from "./middlewares/error.middleware";
-import { BadRequestError, UnauthorizedError } from "./errors/custom-errors";
 import { authMiddleware } from "./middlewares/auth.middleware";
-
+import * as cors from "cors";
 class App {
   public app: express.Application;
   private controllers: IController[];
@@ -19,6 +18,7 @@ class App {
 
   private initializeMiddlewares() {
     console.log("-- Starting middlewares");
+    this.app.use(cors());
 
     this.app.use(express.json());
     this.app.use(expressMonitor());

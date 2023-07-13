@@ -24,8 +24,10 @@ export default class ExpenseController implements IController {
   }
 
   create = async (req: Request, res: Response) => {
+    const { id: userId, email } = req.authUser;
+
     const expense: Expense = req.body;
-    let data = await this.expenseService.create(expense);
+    let data = await this.expenseService.create({ ...expense, userId });
 
     res.json(data);
   };
