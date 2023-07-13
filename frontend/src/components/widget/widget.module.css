@@ -13,6 +13,11 @@
     flex-direction: column;
     justify-content: space-between;
 }
+
+.widget {
+    width: 100%;
+}
+
 .widget .left .title, .widget .right .title {
     font-weight: bold;
     font-size: 0.8rem;
@@ -59,3 +64,4 @@
     font-size: 5em;
     cursor: pointer;
 }
+

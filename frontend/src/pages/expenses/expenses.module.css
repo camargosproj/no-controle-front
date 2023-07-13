@@ -1,0 +1,18 @@
+.expenses {
+    padding: 2rem;
+}
+.widgets {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.2rem;
+    width: 100%;
+
+}
+@media screen and (max-width: 1000px) {
+
+
+
+.widgets {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

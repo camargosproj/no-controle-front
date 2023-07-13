@@ -12,7 +12,7 @@ const Layout = ({ children }: LayoutProps) => {
     return (
         <>
             <div className={styles.home}>
-                <SideBar />
+                {/* <SideBar /> */}
                 <div className={styles.homeContainer}>
                     <NavBar />
                     {children}

@@ -2,6 +2,7 @@ import Widget from "../../components/widget/Widget";
 import { IncomeResponse } from "./types.incomes";
 import styles from "./incomes.module.css";
 import AddWidget from "../../components/widget/AddWidget";
+import api from "../../services/api-client/api";
 
 const Incomes = ({ incomes }: IncomeResponse) => {
     return (
@@ -23,9 +24,7 @@ const Incomes = ({ incomes }: IncomeResponse) => {
 // This gets called on every request
 export async function getServerSideProps() {
     // Fetch data from external API
-    const res = await fetch(`http://backend:4000/incomes`)
-    const incomes = await res.json()
-
+    const { data: incomes } = await api.get('/incomes');
 
     // Pass data to the page via props
     return { props: { incomes } };

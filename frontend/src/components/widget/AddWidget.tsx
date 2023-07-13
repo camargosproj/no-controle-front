@@ -6,11 +6,13 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Box } from "@mui/system";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 // Styles
 import styles from "./widget.module.css";
+import api from "../../services/api-client/api";
+import { useRouter } from "next/router";
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -25,15 +27,30 @@ const style = {
 };
 
 const AddWidget = () => {
+    const [categories, setCategories] = useState<any>([]);
+    const router = useRouter();
 
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
-    const onSubmit = data => console.log(data);
+    const onSubmit = async (data: any) => {
+        const transactionGroupId = "0dda65d3-ee8f-4ef2-8061-3112ae61c943"
+        console.log(data);
+
+        const { data: transaction } = await api.post('/expense', {
+            ...data,
+            amount: parseFloat(data.amount),
+            date: value,
+            transactionGroupId
+        })
+        console.log(transaction);
+        handleClose();
+        router.push('/expenses');
+
+    };
 
     const [open, setOpen] = useState(false);
 
-    const [value, setValue] = useState<Dayjs | null>(null);
+    const [value, setValue] = useState(null);
 
-    console.log(value)
 
     const [age, setAge] = useState('');
 
@@ -41,8 +58,20 @@ const AddWidget = () => {
         setAge(event.target.value);
     };
 
+    const getCategories = async () => {
+        const { data: categories } = await api.get('/category');
+
+
+
+        setCategories(categories);
+    }
+
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+
+    useEffect(() => {
+        getCategories();
+    }, [])
     return (
         <div className={styles.AddIconContainer}>
             <AddIcon className={styles.AddIcon} onClick={handleOpen} />
@@ -76,8 +105,10 @@ const AddWidget = () => {
                                 <DatePicker
                                     label="Data"
                                     value={value}
+                                    {...register("date")}
                                     onChange={(newValue) => {
-                                        setValue(newValue);
+                                        const date = newValue?.format('YYYY-MM-DD');
+                                        setValue(date);
                                     }}
                                     renderInput={(params) => <TextField {...params} />}
                                 />
@@ -88,17 +119,18 @@ const AddWidget = () => {
                             <Select
                                 labelId="demo-simple-select-standard-label"
                                 id="demo-simple-select-standard"
-                                value={age}
+                                defaultValue={""}
                                 // onChange={handleChange}
                                 label="Categoria"
                                 {...register("categoryId")}
                             >
                                 <MenuItem value="">
-                                    <em>None</em>
+                                    <em>Escolha uma categoria</em>
                                 </MenuItem>
-                                <MenuItem value={10}>Salário</MenuItem>
-                                <MenuItem value={20}>Saúde</MenuItem>
-                                <MenuItem value={30}>Lazer</MenuItem>
+                                {categories.map((category, index) => (
+                                    <MenuItem key={index} value={category.id}>{category.name}</MenuItem>
+                                ))}
+
                             </Select>
 
                         </FormControl>

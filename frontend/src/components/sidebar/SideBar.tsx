@@ -37,7 +37,7 @@ const SideBar = () => {
                             <span>Rendimentos</span>
                         </li>
                     </Link>
-                    <Link href="/despesas">
+                    <Link href="/expenses">
                         <li>
                             <AddCardIcon className={styles.icon} />
                             <span>Despesas</span>

@@ -7,6 +7,7 @@ import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import Image from "next/image";
+import Link from "next/link";
 
 
 
@@ -14,6 +15,7 @@ const NavBar = () => {
     return (
         <div className={styles.navbar}>
             <div className={styles.container}>
+                <Link href="/">HOME</Link>
                 <div className={styles.searchContainer}>
                     <input type="text" placeholder="Pesquisar" />
                     <SearchOutlinedIcon />
