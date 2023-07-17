@@ -1,34 +1,41 @@
-
-// Styles
 import styles from "./navbar.module.css";
-
-// Third-party libraries
-import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
-import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
-import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
+import {
+    SearchOutlined,
+    NotificationsNoneOutlined,
+    DarkModeOutlined,
+    ExitToApp,
+    PaidSharp
+} from "@mui/icons-material";
 import Image from "next/image";
 import Link from "next/link";
-
-
 
 const NavBar = () => {
     return (
         <div className={styles.navbar}>
             <div className={styles.container}>
-                <Link href="/">HOME</Link>
-                <div className={styles.searchContainer}>
-                    <input type="text" placeholder="Pesquisar" />
-                    <SearchOutlinedIcon />
+                <div className={styles.navLeftContainer}>
+                    <Link href="/">NO CONTROLE</Link>
+                    <PaidSharp />
+                    <div className={styles.searchContainer}>
+                        <input type="text" placeholder="Pesquisar" />
+                        <SearchOutlined />
+                    </div>
                 </div>
-                <div className={styles.rightContainer}>
-                    <div className={styles.item} >
-                        <DarkModeOutlinedIcon className={`${styles.icon} ${styles.darkIcon}`} />
+                <div className={styles.navRightContainer}>
+                    <div className={styles.item}>
+                        <DarkModeOutlined
+                            className={`${styles.icon} ${styles.darkIcon}`}
+                        />
                     </div>
                     <div className={styles.item}>
-                        <NotificationsNoneOutlinedIcon className={`${styles.icon} ${styles.notificationIcon}`} />
+                        <NotificationsNoneOutlined
+                            className={`${styles.icon} ${styles.notificationIcon}`}
+                        />
                         <div className={styles.notificationCounter}>1</div>
                         <div className={styles.item}>
-                            <span>Olá, <b>Marcos</b></span>
+                            <span>
+                                Olá, <b>Marcos</b>
+                            </span>
                         </div>
                         <div className={styles.item}>
                             <Image
@@ -39,13 +46,14 @@ const NavBar = () => {
                                 height={100}
                             />
                         </div>
+                        <div className={styles.item}>
+                            <ExitToApp className={styles.exitIcon} />
+                        </div>
                     </div>
                 </div>
-
             </div>
-
-        </div >
+        </div>
     );
-}
+};
 
 export default NavBar;

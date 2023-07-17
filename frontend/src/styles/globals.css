@@ -8,6 +8,11 @@
 
 }
 
+a {
+  text-decoration: none;
+  color: var(--font-color);
+}
+
 :root{
   --main-color: rgba(81, 227, 212, 0.49);
   --secondary-color: #15637b;

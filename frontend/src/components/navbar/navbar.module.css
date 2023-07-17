@@ -8,7 +8,7 @@
 }
 .navbar .container {
     width: 100%;
-    padding: 20px;
+    padding: 0 2rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -28,29 +28,34 @@
     color: #999;
     font-size: 0.8rem;
 }
-.navbar .container .rightContainer {
+.navbar .container .navRightContainer {
     display: flex;
     align-items: center;
 }
-.navbar .container .rightContainer .item {
+.navbar .container .navRightContainer .item {
     display: flex;
     align-items: center;
-    margin-right: 1rem;
+    gap: 0.7rem;
     position: relative;
 }
-.navbar .container .rightContainer .item .icon {
+.navbar .container .navRightContainer .item .icon {
     font-size: 1.2rem;
     margin-right: 0.3rem;
 }
-.navbar .container .rightContainer .item .darkIcon, .navbar .container .rightContainer .item .notification-icon {
+
+.exitIcon {
+    color: var(--font-color);
     cursor: pointer;
 }
-.navbar .container .rightContainer .item .profileImage {
+.navbar .container .navRightContainer .item .darkIcon, .navbar .container .navRightContainer .item .notification-icon {
+    cursor: pointer;
+}
+.navbar .container .navRightContainer .item .profileImage {
     width: 30px;
     height: 30px;
     border-radius: 50%;
 }
-.navbar .container .rightContainer .item .notificationCounter {
+.navbar .container .navRightContainer .item .notificationCounter {
     width: 0.8rem;
     height: 0.8rem;
     border-radius: 50%;
@@ -64,4 +69,10 @@
     position: absolute;
     top: 4px;
     left: 8px;
+}
+
+.navLeftContainer {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
