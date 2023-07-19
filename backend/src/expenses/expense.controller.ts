@@ -1,8 +1,8 @@
 import { Request, Response, Router } from "express";
-import { Expense } from "./expense.interface";
-import ExpenseService from "./expense.service";
 import { IController } from "../core/interfaces";
 import { toAsyncRouter } from "../middlewares/error.middleware";
+import { Expense } from "./expense.interface";
+import ExpenseService from "./expense.service";
 
 export default class ExpenseController implements IController {
   public path = "/expense";
@@ -40,7 +40,7 @@ export default class ExpenseController implements IController {
       transactionGroupId as string
     );
 
-    res.send(data);
+    res.json(data);
   };
 
   findOne = async (req: Request, res: Response): Promise<any> => {

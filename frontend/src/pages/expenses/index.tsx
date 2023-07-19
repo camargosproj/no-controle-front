@@ -5,14 +5,14 @@ import Widget from "../../components/widget/Widget";
 import api from "../../services/api-client/api";
 import { ExpensesResponse } from "./types.expenses";
 
-const Expense = ({ expenses }: ExpensesResponse) => {
+const Expense = ({ expenses, balance }: ExpensesResponse) => {
     return (
         <div className="flex p-4 gap-2">
             <div className="w-1/4 sm:w-[10%] gap-4 flex flex-col">
                 <AddWidget />
-                <Widget type="despesas" data={{ description: 'Despesas', amount: '5000' }} />
-                <Widget type="saldo" data={{ description: 'Saldo', amount: '5000' }} />
-
+                <Widget type="despesas" data={{ description: 'Despesas', amount: balance.totalExpense }} />
+                <Widget type="rendimentos" data={{ description: 'Rendimentos', amount: balance.totalIncome }} />
+                <Widget type="saldo" data={{ description: 'Saldo', amount: balance.totalBalance }} />
             </div>
             <div className={'flex flex-1 flex-col gap-3'}>
                 <TableHead />
@@ -30,7 +30,7 @@ export async function getServerSideProps() {
     // Fetch data from external API
     const { data } = await api.get('/expense');
 
-    const expenses = data.map((expense) => {
+    const expenses = data.data.map((expense) => {
         return {
             ...expense,
             date: new Date(expense.date).toLocaleDateString("pt-BR", {
@@ -43,7 +43,7 @@ export async function getServerSideProps() {
     })
 
     // Pass data to the page via props
-    return { props: { expenses } };
+    return { props: { expenses, balance: data.balance } };
 }
 
 export default Expense;

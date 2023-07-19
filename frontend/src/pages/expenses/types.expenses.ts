@@ -11,4 +11,9 @@ export type Expenses = {
 
 export type ExpensesResponse = {
   expenses: Expenses[];
+  balance: {
+    totalExpense: number;
+    totalIncome: number;
+    totalBalance: number;
+  };
 };

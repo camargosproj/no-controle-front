@@ -11,7 +11,7 @@ type WidgetData = {
     type: string,
     data: {
         description: string,
-        amount: string,
+        amount: number,
         link?: string,
         icon?: JSX.Element
     }

@@ -1,8 +1,8 @@
-import Widget from "../../components/widget/Widget";
-import { IncomeResponse } from "./types.incomes";
-import styles from "./incomes.module.css";
 import AddWidget from "../../components/widget/AddWidget";
+import Widget from "../../components/widget/Widget";
 import api from "../../services/api-client/api";
+import styles from "./incomes.module.css";
+import { IncomeResponse } from "./types.incomes";
 
 const Incomes = ({ incomes }: IncomeResponse) => {
     return (

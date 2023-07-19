@@ -20,18 +20,72 @@ export default class ExpenseService {
     );
     return { ...expenseData, totalAmount };
   }
-  async findAll(userId: string, transactionGroupId: string): Promise<any[]> {
+  async findAll(userId: string, transactionGroupId: string) {
     let data = await this.prisma.expense.findMany({
       where: {
         userId,
         transactionGroupId,
       },
     });
+
     const totalAmount = await this.getTotalAmount(transactionGroupId);
     if (totalAmount) {
       return [...data, { totalAmount }];
     }
-    return data;
+    return {
+      data: data,
+      balance: await this.getBalance(userId),
+    };
+  }
+
+  async getBalance(userId: string) {
+    const totalExpense = await this.prisma.expense.aggregate({
+      where: {
+        userId,
+      },
+      _sum: {
+        amount: true,
+      },
+    });
+
+    const totalIncome = await this.prisma.income.aggregate({
+      where: {
+        userId,
+      },
+      _sum: {
+        amount: true,
+      },
+    });
+
+    const totalBalance = totalIncome._sum.amount - totalExpense._sum.amount;
+
+    const data = await this.prisma.balance.upsert({
+      where: {
+        userId,
+      },
+      update: {
+        expenseTotal: totalExpense._sum.amount,
+        incomeTotal: totalIncome._sum.amount,
+        balance: totalBalance,
+      },
+      create: {
+        userId,
+        expenseTotal: totalExpense._sum.amount,
+        incomeTotal: totalIncome._sum.amount,
+        balance: totalBalance,
+      },
+      select: {
+        expenseTotal: true,
+        incomeTotal: true,
+        balance: true,
+      },
+    });
+
+    return {
+      totalExpense: data.expenseTotal,
+      totalIncome: data.incomeTotal,
+      totalBalance: data.balance,
+    };
   }
 
   async findOne(userId: string, id: string) {
