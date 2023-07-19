@@ -1,8 +1,8 @@
-import { Response, Request, Router } from "express";
-import { Income } from "./incomes.interface";
-import IncomeService from "./income.service";
+import { Request, Response, Router } from "express";
 import { IController } from "../core/interfaces";
 import { toAsyncRouter } from "../middlewares/error.middleware";
+import IncomeService from "./income.service";
+import { Income } from "./incomes.interface";
 
 export default class IncomesController implements IController {
   public path = "/incomes";

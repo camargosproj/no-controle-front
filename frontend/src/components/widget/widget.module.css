@@ -1,10 +1,10 @@
 .widget, .AddIconContainer {
     display: flex;
     justify-content: space-between;
-    flex: 1;
+    /* flex: 1; */
     padding: 0.8rem;
     border-radius: 0.8rem;
-    height: 100px;
+    /* height: 100px; */
     border-radius: 0.8rem;
     box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
 }

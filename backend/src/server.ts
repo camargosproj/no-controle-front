@@ -1,12 +1,12 @@
-import App from "./app";
 import "dotenv/config";
+import App from "./app";
 
-import validateEnv from "./utils/validateEnv";
+import AppController from "./app.controller";
+import AuthModule from "./auth/auth.module";
 import CategoryModule from "./category/category.module";
 import ExpenseModule from "./expenses/expense.module";
 import IncomeModule from "./incomes/income.module";
-import AppController from "./app.controller";
-import AuthModule from "./auth/auth.module";
+import validateEnv from "./utils/validateEnv";
 
 validateEnv();
 

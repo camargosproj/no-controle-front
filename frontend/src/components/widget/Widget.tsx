@@ -3,16 +3,15 @@
 import styles from "./widget.module.css";
 
 // Third-party libraries
-import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
+import { AccountBalanceWalletOutlined, KeyboardArrowDown, MonetizationOnOutlined } from "@mui/icons-material";
+
 import Link from "next/link";
 
 type WidgetData = {
     type: string,
     data: {
         description: string,
-        amount: string
+        amount: string,
         link?: string,
         icon?: JSX.Element
     }
@@ -25,7 +24,7 @@ const Widget = ({ type, data }: WidgetData) => {
             data = {
                 ...data,
                 link: "/incomes",
-                icon: (<MonetizationOnOutlinedIcon
+                icon: (<MonetizationOnOutlined
                     className={styles.icon}
                     style={{
                         color: "white",
@@ -37,7 +36,7 @@ const Widget = ({ type, data }: WidgetData) => {
             data = {
                 ...data,
                 link: "/expenses",
-                icon: (<MonetizationOnOutlinedIcon
+                icon: (<MonetizationOnOutlined
                     className={styles.icon}
                     style={{
                         color: "white",
@@ -49,7 +48,7 @@ const Widget = ({ type, data }: WidgetData) => {
             data = {
                 ...data,
                 link: "/saldo",
-                icon: (<AccountBalanceWalletOutlinedIcon
+                icon: (<AccountBalanceWalletOutlined
                     className={styles.icon}
                     style={{
                         color: "white",
@@ -72,7 +71,7 @@ const Widget = ({ type, data }: WidgetData) => {
             </div>
             <div className={styles.right}>
                 <div className={`${styles.percentage} ${styles.positive}`}>
-                    <KeyboardArrowUpIcon />
+                    <KeyboardArrowDown />
                     20%
                 </div>
                 {data.icon}

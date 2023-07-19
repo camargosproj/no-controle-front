@@ -1,18 +1,16 @@
 import AddIcon from "@mui/icons-material/Add";
-import { Button, FormControl, Input, InputAdornment, InputLabel, MenuItem, Modal, ModalRoot, Select, SelectChangeEvent, Typography } from "@mui/material";
-import { Dayjs } from 'dayjs';
+import { Button, FormControl, Input, InputAdornment, InputLabel, MenuItem, Modal, Select, SelectChangeEvent } from "@mui/material";
 import TextField from '@mui/material/TextField';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Box } from "@mui/system";
-import { useState, useEffect } from "react";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 // Styles
-import styles from "./widget.module.css";
-import api from "../../services/api-client/api";
 import { useRouter } from "next/router";
+import api from "../../services/api-client/api";
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -73,8 +71,8 @@ const AddWidget = () => {
         getCategories();
     }, [])
     return (
-        <div className={styles.AddIconContainer}>
-            <AddIcon className={styles.AddIcon} onClick={handleOpen} />
+        <div className="bg-slate-50 rounded-md shadow-md cursor-pointer h-16 w-full flex justify-center content-center flex-wrap">
+            <AddIcon className="text-7xl text-primary" onClick={handleOpen} />
             <Modal
                 open={open}
                 onClose={handleClose}

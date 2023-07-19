@@ -5,6 +5,7 @@
     align-items: center;
     font-size: 14px;
     color: var(--font-color);
+    margin-bottom: 1rem;
 }
 .navbar .container {
     width: 100%;
