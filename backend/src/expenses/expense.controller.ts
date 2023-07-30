@@ -24,7 +24,7 @@ export default class ExpenseController implements IController {
   }
 
   create = async (req: Request, res: Response) => {
-    const { id: userId, email } = req.authUser;
+    const { id: userId } = req.authUser;
 
     const expense: Expense = req.body;
     let data = await this.expenseService.create({ ...expense, userId });
@@ -33,7 +33,7 @@ export default class ExpenseController implements IController {
   };
 
   findAll = async (req: Request, res: Response) => {
-    const { id: userId, email } = req.authUser;
+    const { id: userId } = req.authUser;
     const { transactionGroupId } = req.query;
     const data = await this.expenseService.findAll(
       userId,
@@ -44,7 +44,7 @@ export default class ExpenseController implements IController {
   };
 
   findOne = async (req: Request, res: Response): Promise<any> => {
-    const { id: userId, email } = req.authUser;
+    const { id: userId } = req.authUser;
     const { id } = req.params;
     const data = await this.expenseService.findOne(userId, id);
 
@@ -52,7 +52,7 @@ export default class ExpenseController implements IController {
   };
 
   update = async (req: Request, res: Response): Promise<any> => {
-    const { id: userId, email } = req.authUser;
+    const { id: userId } = req.authUser;
     const { id } = req.params;
     const expense: Expense = req.body;
     const data = await this.expenseService.update(userId, id, expense);
@@ -60,7 +60,7 @@ export default class ExpenseController implements IController {
     res.send(data);
   };
   delete = async (req: Request, res: Response): Promise<void> => {
-    const { id: userId, email } = req.authUser;
+    const { id: userId } = req.authUser;
     const { id } = req.params;
     const data = await this.expenseService.delete(userId, id);
 

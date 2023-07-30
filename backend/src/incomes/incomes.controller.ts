@@ -5,7 +5,7 @@ import IncomeService from "./income.service";
 import { Income } from "./incomes.interface";
 
 export default class IncomesController implements IController {
-  public path = "/incomes";
+  public path = "/income";
   router: Router = toAsyncRouter();
   private incomeService: IncomeService;
   isPrivate: boolean = true;
@@ -17,31 +17,54 @@ export default class IncomesController implements IController {
 
   initializeRoutes(): void {
     this.router.get(this.path, this.findAll);
+    this.router.post(this.path, this.create);
     this.router.get(this.path + "/:id", this.findOne);
     this.router.put(this.path + "/:id", this.update);
     this.router.delete(this.path + "/:id", this.delete);
   }
 
   create = async (req: Request, res: Response) => {
-    const income: Income = req.body;
-    let data = await this.incomeService.create(income);
+    const { id: userId } = req.authUser;
 
-    res.send(data);
+    const expense: Income = req.body;
+    let data = await this.incomeService.create({ ...expense, userId });
+
+    res.json(data);
   };
 
   findAll = async (req: Request, res: Response) => {
-    let data = await this.incomeService.findAll();
+    const { id: userId } = req.authUser;
+    const { transactionGroupId } = req.query;
+    const data = await this.incomeService.findAll(
+      userId,
+      transactionGroupId as string
+    );
+
+    res.json(data);
+  };
+
+  findOne = async (req: Request, res: Response): Promise<any> => {
+    const { id: userId } = req.authUser;
+    const { id } = req.params;
+    const data = await this.incomeService.findOne(userId, id);
 
     res.send(data);
   };
 
-  findOne(req: Request, res: Response): Promise<any> {
-    throw new Error("Method not implemented.");
-  }
-  update(req: Request, res: Response): Promise<void> {
-    throw new Error("Method not implemented.");
-  }
-  delete(req: Request, res: Response): void {
-    throw new Error("Method not implemented.");
-  }
+  update = async (req: Request, res: Response): Promise<any> => {
+    const { id: userId } = req.authUser;
+    const { id } = req.params;
+    const expense: Income = req.body;
+    const data = await this.incomeService.update(userId, id, expense);
+
+    res.send(data);
+  };
+
+  delete = async (req: Request, res: Response): Promise<void> => {
+    const { id: userId } = req.authUser;
+    const { id } = req.params;
+    const data = await this.incomeService.delete(userId, id);
+
+    res.send(data);
+  };
 }

@@ -1,11 +1,14 @@
+import BalanceService from "../balance/balance.service";
 import { PrismaService } from "../core/shared";
 import { NotFoundError } from "../errors";
 import { Expense } from "./expense.interface";
 
 export default class ExpenseService {
   private prisma: PrismaService;
-  constructor(prisma: PrismaService) {
+  private balanceService: BalanceService;
+  constructor(prisma: PrismaService, balanceService: BalanceService) {
     this.prisma = prisma;
+    this.balanceService = balanceService;
   }
   async create(expense: Expense) {
     const expenseData = await this.prisma.expense.create({
@@ -15,11 +18,13 @@ export default class ExpenseService {
       },
     });
 
-    const totalAmount = await this.updateTotalAmount(
-      expense.transactionGroupId
+    const totalAmount = await this.balanceService.updateTotalAmount(
+      expense.transactionGroupId,
+      "expense"
     );
     return { ...expenseData, totalAmount };
   }
+
   async findAll(userId: string, transactionGroupId: string) {
     let data = await this.prisma.expense.findMany({
       where: {
@@ -28,63 +33,16 @@ export default class ExpenseService {
       },
     });
 
-    const totalAmount = await this.getTotalAmount(transactionGroupId);
+    const totalAmount = await this.balanceService.getTotalAmount(
+      transactionGroupId,
+      "expense"
+    );
     if (totalAmount) {
       return [...data, { totalAmount }];
     }
     return {
       data: data,
-      balance: await this.getBalance(userId),
-    };
-  }
-
-  async getBalance(userId: string) {
-    const totalExpense = await this.prisma.expense.aggregate({
-      where: {
-        userId,
-      },
-      _sum: {
-        amount: true,
-      },
-    });
-
-    const totalIncome = await this.prisma.income.aggregate({
-      where: {
-        userId,
-      },
-      _sum: {
-        amount: true,
-      },
-    });
-
-    const totalBalance = totalIncome._sum.amount - totalExpense._sum.amount;
-
-    const data = await this.prisma.balance.upsert({
-      where: {
-        userId,
-      },
-      update: {
-        expenseTotal: totalExpense._sum.amount,
-        incomeTotal: totalIncome._sum.amount,
-        balance: totalBalance,
-      },
-      create: {
-        userId,
-        expenseTotal: totalExpense._sum.amount,
-        incomeTotal: totalIncome._sum.amount,
-        balance: totalBalance,
-      },
-      select: {
-        expenseTotal: true,
-        incomeTotal: true,
-        balance: true,
-      },
-    });
-
-    return {
-      totalExpense: data.expenseTotal,
-      totalIncome: data.incomeTotal,
-      totalBalance: data.balance,
+      balance: await this.balanceService.getBalance(userId),
     };
   }
 
@@ -117,9 +75,15 @@ export default class ExpenseService {
     });
 
     if (expense.transactionGroupId !== data.transactionGroupId) {
-      await this.updateTotalAmount(expense.transactionGroupId);
+      await this.balanceService.updateTotalAmount(
+        expense.transactionGroupId,
+        "expense"
+      );
     }
-    await this.updateTotalAmount(data.transactionGroupId);
+    await this.balanceService.updateTotalAmount(
+      data.transactionGroupId,
+      "expense"
+    );
 
     return updatedExpense;
   }
@@ -133,58 +97,11 @@ export default class ExpenseService {
       },
     });
 
-    await this.updateTotalAmount(updatedExpense.transactionGroupId);
+    await this.balanceService.updateTotalAmount(
+      updatedExpense.transactionGroupId,
+      "expense"
+    );
 
     return;
-  }
-
-  async getTotalAmount(transactionGroupId: string) {
-    if (!transactionGroupId) {
-      return;
-    }
-    await this.updateTotalAmount(transactionGroupId);
-
-    const group = await this.prisma.transactionGroup.findFirst({
-      where: {
-        id: transactionGroupId,
-      },
-      select: {
-        totalAmount: true,
-      },
-    });
-
-    if (!group) {
-      throw new NotFoundError("Group not found");
-    }
-
-    return group.totalAmount;
-  }
-
-  async updateTotalAmount(transactionGroupId: string) {
-    const totalAmount = await this.prisma.expense.aggregate({
-      where: {
-        transactionGroupId,
-      },
-      _sum: {
-        amount: true,
-      },
-    });
-
-    if (!totalAmount._sum.amount) {
-      return;
-    }
-
-    await this.prisma.$transaction([
-      this.prisma.transactionGroup.update({
-        where: {
-          id: transactionGroupId,
-        },
-        data: {
-          totalAmount: totalAmount._sum.amount,
-        },
-      }),
-    ]);
-
-    return totalAmount._sum.amount;
   }
 }

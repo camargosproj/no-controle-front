@@ -1,4 +1,4 @@
-import { Router, Request, Response } from "express";
+import { Request, Response, Router } from "express";
 import { ParamsDictionary } from "express-serve-static-core";
 import { ParsedQs } from "qs";
 import { IController } from "./core/interfaces";
@@ -22,8 +22,7 @@ export default class AppController implements IController {
     throw new Error("Method not implemented.");
   }
   findAll = (req: Request, res: Response) => {
-    console.log("Hello World!");
-    res.send("Hello World!");
+    res.send("API WORKING!");
   };
   findOne(
     req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>,
