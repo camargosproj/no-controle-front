@@ -1,9 +1,10 @@
+import * as cors from "cors";
 import * as express from "express";
 import * as expressMonitor from "express-status-monitor";
 import { IController } from "./core/interfaces";
-import { errorHandler } from "./middlewares/error.middleware";
 import { authMiddleware } from "./middlewares/auth.middleware";
-import * as cors from "cors";
+import { errorHandler } from "./middlewares/error.middleware";
+import { envConfig } from "./utils/validateEnv";
 class App {
   public app: express.Application;
   private controllers: IController[];
@@ -51,7 +52,7 @@ class App {
   }
 
   public listen() {
-    return this.app.listen(process.env.PORT || 3000, () => {
+    return this.app.listen(envConfig.PORT, () => {
       console.log(`-- App listening on the port ${process.env.PORT}`);
     });
   }

@@ -1,9 +1,16 @@
-import { cleanEnv, port } from "envalid";
+import { cleanEnv, email, host, num, port, str } from "envalid";
 
 function validateEnv() {
-  cleanEnv(process.env, {
+  return cleanEnv(process.env, {
     PORT: port(),
+    EMAIL_HOST: host(),
+    EMAIL_PORT: port(),
+    EMAIL_USER: email(),
+    EMAIL_PASSWORD: str(),
+    JWT_SECRET: str(),
+    JWT_EXPIRES_IN: str(),
+    BCRYPT_SALT_ROUNDS: num(),
   });
 }
 
-export default validateEnv;
+export const envConfig = validateEnv();

@@ -1,9 +1,9 @@
 export class HttpError extends Error {
-  code: number;
+  statusCode: number;
   constructor(message: string, code: number) {
     console.log(`-- HttpError: `);
     super(message);
-    this.code = code;
+    this.statusCode = code;
   }
 }
 export class BadRequestError extends HttpError {
@@ -14,6 +14,12 @@ export class BadRequestError extends HttpError {
 export class UnauthorizedError extends HttpError {
   constructor(message: string) {
     super(message, 401);
+  }
+}
+
+export class ConflictError extends HttpError {
+  constructor(message: string) {
+    super(message, 409);
   }
 }
 

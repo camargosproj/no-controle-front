@@ -1,10 +1,15 @@
 import * as jwt from "jsonwebtoken";
 import { PrismaService } from "../core/shared";
-import { UnauthorizedError } from "../errors/custom-errors";
+import EmailService from "../core/shared/email/email.service";
+import { ConflictError, UnauthorizedError } from "../errors/custom-errors";
 import { comparePassword, hashPassword } from "../utils/util";
+import { envConfig } from "../utils/validateEnv";
 
 export default class AuthService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private emailService: EmailService
+  ) {}
 
   async singIn(email: string, password: string) {
     const userExists = await this.prisma.user.findUnique({
@@ -34,9 +39,9 @@ export default class AuthService {
         id: userExists.id,
         email: userExists.email,
       },
-      process.env.JWT_SECRET,
+      envConfig.JWT_SECRET,
       {
-        expiresIn: process.env.JWT_EXPIRES_IN,
+        expiresIn: envConfig.JWT_EXPIRES_IN,
       }
     );
     delete userExists.password;
@@ -50,7 +55,7 @@ export default class AuthService {
       },
     });
     if (userExists) {
-      throw new UnauthorizedError("User already exists");
+      throw new ConflictError("User already exists");
     }
 
     const validationCode = Math.floor(
@@ -70,7 +75,11 @@ export default class AuthService {
       },
     });
 
-    // TODO: Send email with validation code
+    const message = `Olá ${newUser.name}, <br>Para validar seu email use seu código de validação <strong>${validationCode}</strong>`;
+
+    this.emailService.sendEmail(newUser.email, "Bem-vindo ao NoControle ", {
+      html: message,
+    });
     return newUser;
   }
 

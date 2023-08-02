@@ -38,14 +38,14 @@ export const errorHandler = (
   res: Response,
   next: NextFunction
 ) => {
-  if (!err.code) {
+  if (!err.statusCode) {
     console.log(`-- Error not handled: `, err);
     return res
       .status(500)
       .json({ code: 500, message: "Internal server error" });
   }
   const errorObject = {
-    code: err.code,
+    code: err.statusCode,
     message: err.message,
     path: req.path,
     method: req.method,
@@ -54,5 +54,5 @@ export const errorHandler = (
 
   console.log(`-- Error handled: `, errorObject);
 
-  return res.status(err.code).json(errorObject);
+  return res.status(err.statusCode).json(errorObject);
 };
