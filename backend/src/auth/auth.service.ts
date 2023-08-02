@@ -16,6 +16,10 @@ export default class AuthService {
       throw new UnauthorizedError("Invalid credentials");
     }
 
+    if (!userExists.validated) {
+      throw new UnauthorizedError("User not validated");
+    }
+
     const isPasswordValid = await comparePassword(
       password,
       userExists.password
@@ -49,15 +53,24 @@ export default class AuthService {
       throw new UnauthorizedError("User already exists");
     }
 
+    const validationCode = Math.floor(
+      100000 + Math.random() * 900000
+    ).toString();
+
     const newUser = await this.prisma.user.create({
       data: {
         name,
         email,
         password: await hashPassword(password),
+        validationCode,
+      },
+      select: {
+        name: true,
+        email: true,
       },
     });
 
-    delete newUser.password;
+    // TODO: Send email with validation code
     return newUser;
   }
 
