@@ -10,6 +10,7 @@ function validateEnv() {
     JWT_SECRET: str(),
     JWT_EXPIRES_IN: str(),
     BCRYPT_SALT_ROUNDS: num(),
+    VERIFICATION_CODE_EXPIRES_IN: str(),
   });
 }
 

@@ -17,6 +17,7 @@ export default class AuthController implements IController {
   initializeRoutes(): void {
     this.router.post(this.path + "/singin", this.singIn);
     this.router.post(this.path + "/singup", this.singUp);
+    this.router.post(this.path + "/validate", this.validate);
     this.router.patch(this.path, authMiddleware, this.update);
   }
   singIn = async (req: Request, res: Response, next: NextFunction) => {
@@ -47,5 +48,17 @@ export default class AuthController implements IController {
     const user = await this.authService.updateUser(id, name, email, password);
 
     res.status(200).json(user);
+  };
+
+  validate = async (req: Request, res: Response, next: NextFunction) => {
+    const { email, code } = req.body;
+
+    if (!email || !code) {
+      throw new BadRequestError("Email and code are required");
+    }
+
+    await this.authService.validateUser(email, code);
+
+    res.status(200).json();
   };
 }

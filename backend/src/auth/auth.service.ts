@@ -1,7 +1,13 @@
 import * as jwt from "jsonwebtoken";
+import * as moment from "moment";
 import { PrismaService } from "../core/shared";
 import EmailService from "../core/shared/email/email.service";
-import { ConflictError, UnauthorizedError } from "../errors/custom-errors";
+import {
+  ConflictError,
+  GoneRequestError,
+  NotFoundError,
+  UnauthorizedError,
+} from "../errors/custom-errors";
 import { comparePassword, hashPassword } from "../utils/util";
 import { envConfig } from "../utils/validateEnv";
 
@@ -58,16 +64,21 @@ export default class AuthService {
       throw new ConflictError("User already exists");
     }
 
-    const validationCode = Math.floor(
+    const verificationCode = Math.floor(
       100000 + Math.random() * 900000
     ).toString();
+
+    const verificationCodeExpiration = moment()
+      .add(envConfig.VERIFICATION_CODE_EXPIRES_IN, "minutes")
+      .toDate();
 
     const newUser = await this.prisma.user.create({
       data: {
         name,
         email,
         password: await hashPassword(password),
-        validationCode,
+        verificationCode,
+        verificationCodeExpiration,
       },
       select: {
         name: true,
@@ -75,11 +86,12 @@ export default class AuthService {
       },
     });
 
-    const message = `Olá ${newUser.name}, <br>Para validar seu email use seu código de validação <strong>${validationCode}</strong>`;
+    const message = `Olá ${newUser.name}, <br>Para validar seu email use seu código de validação <strong>${verificationCode}</strong>`;
 
     this.emailService.sendEmail(newUser.email, "Bem-vindo ao NoControle ", {
       html: message,
     });
+
     return newUser;
   }
 
@@ -106,5 +118,43 @@ export default class AuthService {
     });
 
     return newUser;
+  }
+
+  async validateUser(email: string, code: string) {
+    const userExists = await this.prisma.user.findFirst({
+      where: {
+        email,
+        validated: false,
+        verificationCode: code,
+      },
+    });
+
+    if (!userExists) {
+      throw new NotFoundError("User not found");
+    }
+
+    // Verify if code is expired
+    if (moment().isAfter(userExists.verificationCodeExpiration)) {
+      await this.prisma.user.update({
+        where: {
+          id: userExists.id,
+        },
+        data: {
+          verificationCode: null,
+        },
+      });
+
+      throw new GoneRequestError("Code expired");
+    }
+
+    await this.prisma.user.update({
+      where: {
+        id: userExists.id,
+      },
+      data: {
+        validated: true,
+        verificationCode: null,
+      },
+    });
   }
 }

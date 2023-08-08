@@ -8,17 +8,20 @@ datasource db {
 }
 
 model User {
-  id                     String                   @id @default(uuid())
-  name                   String
-  email                  String                   @unique
-  password               String
-  validationCode         String?
-  validated              Boolean                  @default(false)
-  Expenses               Expense[]
-  Income                 Income[]
-  SharedTransactionGroup SharedTransactionGroup[]
-  TransactionGroup       TransactionGroup[]
-  Balance                Balance[]
+  id                         String                   @id @default(uuid())
+  name                       String
+  email                      String                   @unique
+  password                   String
+  verificationCode           String?
+  verificationCodeExpiration DateTime?
+  validated                  Boolean                  @default(false)
+  updatedAt                  DateTime                 @updatedAt
+  createdAt                  DateTime                 @default(now())
+  Expenses                   Expense[]
+  Income                     Income[]
+  SharedTransactionGroup     SharedTransactionGroup[]
+  TransactionGroup           TransactionGroup[]
+  Balance                    Balance[]
 }
 
 model Category {

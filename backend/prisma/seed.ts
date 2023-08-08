@@ -8,6 +8,7 @@ async function main() {
     email: "dev@dev.com",
     name: "dev",
     password: hash,
+    validated: true,
   };
 
   await prisma.user.upsert({

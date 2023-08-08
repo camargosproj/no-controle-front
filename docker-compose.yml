@@ -5,6 +5,8 @@ services:
       build: ./backend  
       image: backend-nocontrole 
       container_name: backend-nocontrole   
+      environment:
+        - TZ=America/Bahia
       ports:
         - '4000:4000'
       volumes:
