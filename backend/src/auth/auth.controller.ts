@@ -18,6 +18,8 @@ export default class AuthController implements IController {
     this.router.post(this.path + "/singin", this.singIn);
     this.router.post(this.path + "/singup", this.singUp);
     this.router.post(this.path + "/validate", this.validate);
+    this.router.post(this.path + "/send-code", this.sendVerificationCode);
+    this.router.patch(this.path + "/reset-password", this.resetPassword);
     this.router.patch(this.path, authMiddleware, this.update);
   }
   singIn = async (req: Request, res: Response, next: NextFunction) => {
@@ -58,6 +60,36 @@ export default class AuthController implements IController {
     }
 
     await this.authService.validateUser(email, code);
+
+    res.status(200).json();
+  };
+
+  sendVerificationCode = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { email } = req.body;
+
+    if (!email) {
+      throw new BadRequestError("Email is required");
+    }
+
+    await this.authService.sendVerificationCode(email);
+
+    res.status(200).json();
+  };
+
+  resetPassword = async (req: Request, res: Response, next: NextFunction) => {
+    const { email, code, oldPassword, newPassword } = req.body;
+
+    if (!email || !code || !oldPassword || !newPassword) {
+      throw new BadRequestError(
+        "Email, code, old password and new password are required"
+      );
+    }
+
+    await this.authService.resetPassword(email, code, oldPassword, newPassword);
 
     res.status(200).json();
   };

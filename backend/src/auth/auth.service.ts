@@ -8,7 +8,11 @@ import {
   NotFoundError,
   UnauthorizedError,
 } from "../errors/custom-errors";
-import { comparePassword, hashPassword } from "../utils/util";
+import {
+  comparePassword,
+  generateVerificationCode,
+  hashPassword,
+} from "../utils/util";
 import { envConfig } from "../utils/validateEnv";
 
 export default class AuthService {
@@ -21,6 +25,13 @@ export default class AuthService {
     const userExists = await this.prisma.user.findUnique({
       where: {
         email,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        password: true,
+        validated: true,
       },
     });
     if (!userExists) {
@@ -64,13 +75,8 @@ export default class AuthService {
       throw new ConflictError("User already exists");
     }
 
-    const verificationCode = Math.floor(
-      100000 + Math.random() * 900000
-    ).toString();
-
-    const verificationCodeExpiration = moment()
-      .add(envConfig.VERIFICATION_CODE_EXPIRES_IN, "minutes")
-      .toDate();
+    const { verificationCode, verificationCodeExpiration } =
+      generateVerificationCode();
 
     const newUser = await this.prisma.user.create({
       data: {
@@ -86,9 +92,12 @@ export default class AuthService {
       },
     });
 
-    const message = `Olá ${newUser.name}, <br>Para validar seu email use seu código de validação <strong>${verificationCode}</strong>`;
+    const message = this.emailService.getVerificationCodeMessage(
+      userExists.name,
+      verificationCode
+    );
 
-    this.emailService.sendEmail(newUser.email, "Bem-vindo ao NoControle ", {
+    this.emailService.sendEmail(newUser.email, "Bem-vindo ao NoControle", {
       html: message,
     });
 
@@ -121,10 +130,23 @@ export default class AuthService {
   }
 
   async validateUser(email: string, code: string) {
+    const user = await this.verifyVerificationCode(email, code);
+
+    await this.prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        validated: true,
+        verificationCode: null,
+      },
+    });
+  }
+
+  async verifyVerificationCode(email: string, code: string) {
     const userExists = await this.prisma.user.findFirst({
       where: {
         email,
-        validated: false,
         verificationCode: code,
       },
     });
@@ -147,13 +169,65 @@ export default class AuthService {
       throw new GoneRequestError("Code expired");
     }
 
+    return userExists;
+  }
+
+  async sendVerificationCode(email: string) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundError("User not found");
+    }
+
+    const { verificationCode, verificationCodeExpiration } =
+      generateVerificationCode();
+
     await this.prisma.user.update({
       where: {
-        id: userExists.id,
+        id: user.id,
       },
       data: {
-        validated: true,
+        verificationCode,
+        verificationCodeExpiration,
+      },
+    });
+
+    const message = this.emailService.getVerificationCodeMessage(
+      user.name,
+      verificationCode
+    );
+
+    this.emailService.sendEmail(user.email, "Código de Verificação", {
+      html: message,
+    });
+  }
+
+  async resetPassword(
+    email: string,
+    verificationCode: string,
+    oldPassword: string,
+    newPassword: string
+  ) {
+    const user = await this.verifyVerificationCode(email, verificationCode);
+
+    const isPasswordValid = await comparePassword(oldPassword, user.password);
+
+    if (!isPasswordValid) {
+      throw new UnauthorizedError("Old password is invalid");
+    }
+
+    await this.prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        password: await hashPassword(newPassword),
         verificationCode: null,
+        verificationCodeExpiration: null,
       },
     });
   }

@@ -25,4 +25,8 @@ export default class EmailService {
       text,
     });
   }
+
+  getVerificationCodeMessage(name: string, verificationCode: string) {
+    return `Olá ${name}, <br>Para validar seu email use seu código de validação <strong>${verificationCode}</strong>`;
+  }
 }

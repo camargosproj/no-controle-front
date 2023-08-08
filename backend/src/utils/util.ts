@@ -1,7 +1,9 @@
 import * as bcrypt from "bcrypt";
-import * as jwt from "jsonwebtoken";
 import "dotenv/config";
+import * as jwt from "jsonwebtoken";
+import * as moment from "moment";
 import { decodedToken } from "../typings";
+import { envConfig } from "./validateEnv";
 
 export function hashPassword(password: string) {
   return bcrypt.hash(password, Number(process.env.BCRYPT_SALT_ROUNDS));
@@ -18,4 +20,16 @@ export function verifyToken(token: string): decodedToken | null {
     console.log(error);
     return null;
   }
+}
+
+export function generateVerificationCode() {
+  const verificationCode = Math.floor(
+    100000 + Math.random() * 900000
+  ).toString();
+
+  const verificationCodeExpiration = moment()
+    .add(envConfig.VERIFICATION_CODE_EXPIRES_IN, "minutes")
+    .toDate();
+
+  return { verificationCode, verificationCodeExpiration };
 }
