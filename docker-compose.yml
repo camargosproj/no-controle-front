@@ -18,11 +18,13 @@ services:
   nocontrole_mysql_database:
     image: mysql
     container_name: nocontrole_database
+    env_file:
+      - ./backend/.env
     environment:
-        MYSQL_ROOT_PASSWORD: 12345678  
-        MYSQL_DATABASE: nocontrole  
-        MYSQL_USER: nocontrole  
-        MYSQL_PASSWORD: 12345678 
+        MYSQL_ROOT_PASSWORD: ($${DB_PASSWORD})
+        MYSQL_DATABASE: ($${DB_NAME})  
+        MYSQL_USER: ($${DB_USER})  
+        MYSQL_PASSWORD: ($${DB_PASSWORD}) 
     restart: always
     volumes:
         - ./database:/var/lib/mysql
