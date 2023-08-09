@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response, Router } from "express";
-import CategoryService from "./category.service";
 import { IController } from "../core/interfaces";
-import { toAsyncRouter } from "../middlewares/error.middleware";
 import { BadRequestError, HttpError } from "../errors";
+import { toAsyncRouter } from "../middlewares/error.middleware";
+import CategoryService from "./category.service";
 
 export default class CategoryController implements IController {
   path: string = "/category";
@@ -25,6 +25,7 @@ export default class CategoryController implements IController {
 
   create = async (req: Request, res: Response) => {
     const { name } = req?.body;
+
     if (!name) {
       throw new BadRequestError("Name is required");
     }
@@ -32,7 +33,12 @@ export default class CategoryController implements IController {
   };
 
   findAll = async (req: Request, res: Response) => {
-    const data = await this.categoryService.findAll();
+    const { type } = req?.query;
+    if (type && type !== "Receitas" && type !== "Despesas") {
+      throw new BadRequestError("Type should be Receitas or Despesas");
+    }
+
+    const data = await this.categoryService.findAll(type as any);
     res.json(data);
   };
 

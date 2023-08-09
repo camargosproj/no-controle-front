@@ -3,8 +3,12 @@ import { PrismaService } from "../core/shared";
 export default class CategoryService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(): Promise<any[]> {
-    const categories = await this.prisma.category.findMany();
+  async findAll(type: "Receitas" | "Despesas"): Promise<any[]> {
+    const categories = await this.prisma.category.findMany({
+      where: {
+        type,
+      },
+    });
     return categories;
   }
   async findOne(id: string): Promise<any> {
