@@ -1,5 +1,6 @@
 import * as jwt from "jsonwebtoken";
 import * as moment from "moment";
+import BalanceService from "../balance/balance.service";
 import { PrismaService } from "../core/shared";
 import EmailService from "../core/shared/email/email.service";
 import {
@@ -18,8 +19,32 @@ import { envConfig } from "../utils/validateEnv";
 export default class AuthService {
   constructor(
     private prisma: PrismaService,
-    private emailService: EmailService
+    private emailService: EmailService,
+    private balanceService: BalanceService
   ) {}
+
+  async findUserSummary(id: string) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        name: true,
+        email: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+    if (!user) {
+      throw new NotFoundError("User not found");
+    }
+
+    const balance = await this.balanceService.getBalance(id);
+    return {
+      ...user,
+      balance,
+    };
+  }
 
   async singIn(email: string, password: string) {
     const userExists = await this.prisma.user.findUnique({

@@ -15,6 +15,11 @@ export default class AuthController implements IController {
     this.initializeRoutes();
   }
   initializeRoutes(): void {
+    this.router.get(
+      this.path + "/user/summary",
+      authMiddleware,
+      this.findUserSummary
+    );
     this.router.post(this.path + "/singin", this.singIn);
     this.router.post(this.path + "/singup", this.singUp);
     this.router.post(this.path + "/validate", this.validate);
@@ -22,6 +27,13 @@ export default class AuthController implements IController {
     this.router.patch(this.path + "/reset-password", this.resetPassword);
     this.router.patch(this.path, authMiddleware, this.update);
   }
+
+  findUserSummary = async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.authUser;
+    const userSummary = await this.authService.findUserSummary(id);
+    res.status(200).json(userSummary);
+  };
+
   singIn = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body;
 
