@@ -3,7 +3,7 @@ import TableItem from "../../components/shared/table/TableItem";
 import AddWidget from "../../components/widget/AddWidget";
 import Widget from "../../components/widget/Widget";
 import api from "../../services/api-client/api";
-import { ExpensesResponse } from "./types.expenses";
+import { Expense, ExpensesResponse } from "./types.expenses";
 
 const Expense = ({ expenses, balance }: ExpensesResponse) => {
     return (
@@ -26,24 +26,46 @@ const Expense = ({ expenses, balance }: ExpensesResponse) => {
 };
 
 // This gets called on every request
-export async function getServerSideProps() {
-    // Fetch data from external API
-    const { data } = await api.get('/expense');
+export async function getServerSideProps(ctx: any) {
+    try {
+        const cookie = ctx.req.headers.cookie;
+        if (!cookie) {
+            return {
+                redirect: {
+                    destination: '/login',
+                    permanent: false,
+                },
+            }
+        }
 
-    const expenses = data.data.map((expense) => {
+
+        // Fetch data from external API
+        const apiClient = api(ctx);
+        const { data } = await apiClient.get('/expense');
+
+        const expenses = data.data.map((expense: Expense) => {
+            return {
+                ...expense,
+                date: new Date(expense.date).toLocaleDateString("pt-BR", {
+                    day: "2-digit",
+                    month: "long",
+                    year: "numeric",
+                }),
+                link: `/expense/${expense.id}`,
+            };
+        })
+
+        // Pass data to the page via props
+        return { props: { expenses, balance: data.balance } };
+
+    } catch (error) {
         return {
-            ...expense,
-            date: new Date(expense.date).toLocaleDateString("pt-BR", {
-                day: "2-digit",
-                month: "long",
-                year: "numeric",
-            }),
-            link: `/expenses/${expense.id}`,
-        };
-    })
-
-    // Pass data to the page via props
-    return { props: { expenses, balance: data.balance } };
+            redirect: {
+                destination: '/',
+                permanent: false,
+            },
+        }
+    }
 }
 
 export default Expense;

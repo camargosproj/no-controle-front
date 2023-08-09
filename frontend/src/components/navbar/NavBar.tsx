@@ -1,15 +1,17 @@
-import styles from "./navbar.module.css";
 import {
-    SearchOutlined,
-    NotificationsNoneOutlined,
     DarkModeOutlined,
     ExitToApp,
-    PaidSharp
+    NotificationsNoneOutlined,
+    PaidSharp,
+    SearchOutlined
 } from "@mui/icons-material";
 import Image from "next/image";
 import Link from "next/link";
+import { useAuth } from "../../services/contexts/useAuth";
+import styles from "./navbar.module.css";
 
 const NavBar = () => {
+    const { logout } = useAuth();
     return (
         <div className={styles.navbar}>
             <div className={styles.container}>
@@ -46,7 +48,7 @@ const NavBar = () => {
                                 height={100}
                             />
                         </div>
-                        <div className={styles.item}>
+                        <div className={styles.item} onClick={logout}>
                             <ExitToApp className={styles.exitIcon} />
                         </div>
                     </div>

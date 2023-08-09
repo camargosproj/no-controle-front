@@ -1,16 +1,34 @@
 import axios from "axios";
+import { getCookie } from "cookies-next";
+
+const COOKIE_KEY = process.env.NEXT_PUBLIC_AUTH_COOKIE_KEY || "auth_cookie";
 
 const isServer = typeof window === "undefined";
 
 const baseURL = isServer ? "http://backend:4000" : "http://localhost:4000";
+function apiClientInstance(ctx = null) {
+  let cookies = null;
+  if (ctx) {
+    const cookieData = getCookie(COOKIE_KEY, ctx);
+    if (cookieData) {
+      cookies = JSON.parse(cookieData as string);
+    }
+  } else {
+    const cookieData = getCookie(COOKIE_KEY);
+    if (cookieData) {
+      cookies = JSON.parse(cookieData as string);
+    }
+  }
 
-const api = axios.create({
-  baseURL,
-  headers: {
-    "Content-Type": "application/json",
-    Authorization:
-      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImUxZTFhYWY5LTQ5MDQtNGMyYS1iMTU1LTBlZjZjYzFjMDJjMyIsImVtYWlsIjoiZGV2QGRldi5jb20iLCJpYXQiOjE2ODk4MDEwMjUsImV4cCI6MTY4OTg4NzQyNX0.7w48EkjnZwx7z4WZQKsY-VrUyb7AqGEO55l8RpQRsuI",
-  },
-});
+  const api = axios.create({
+    baseURL,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${cookies?.accessToken}`,
+    },
+  });
 
-export default api;
+  return api;
+}
+
+export default apiClientInstance;

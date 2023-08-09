@@ -26,24 +26,62 @@ const Income = ({ incomes, balance }: IncomeResponse) => {
 };
 
 // This gets called on every request
-export async function getServerSideProps() {
-    // Fetch data from external API
-    const { data } = await api.get('/income');
+export async function getServerSideProps(ctx: any) {
+    try {
+        const cookie = ctx.req.headers.cookie;
+        if (!cookie) {
+            return {
+                redirect: {
+                    destination: '/login',
+                    permanent: false,
+                },
+            }
+        }
+        // Fetch data from external API
+        const apiClient = api(ctx);
+        const { data, status } = await apiClient.get('/income')
 
-    const incomes = data.data.map((income: Income) => {
+
+        if (status !== 200) {
+            return {
+                redirect: {
+                    destination: '/',
+                    permanent: false,
+                },
+            }
+        }
+        const incomes = data.data.map((income: Income) => {
+            return {
+                ...income,
+                date: new Date(income.date).toLocaleDateString("pt-BR", {
+                    day: "2-digit",
+                    month: "long",
+                    year: "numeric",
+                }),
+                link: `/income/${income.id}`,
+            };
+        })
+
+        // Pass data to the page via props
+        return { props: { incomes, balance: data.balance } };
+
+    } catch (error) {
+
         return {
-            ...income,
-            date: new Date(income.date).toLocaleDateString("pt-BR", {
-                day: "2-digit",
-                month: "long",
-                year: "numeric",
-            }),
-            link: `/expenses/${income.id}`,
-        };
-    })
+            redirect: {
+                destination: '/',
+                permanent: false,
+            },
+        }
 
-    // Pass data to the page via props
-    return { props: { incomes, balance: data.balance } };
+    }
+
+
+
+
+
+
+
 }
 
 export default Income;

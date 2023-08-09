@@ -1,4 +1,4 @@
-export type Expenses = {
+export type Expense = {
   id: string;
   amount: number;
   description: string;
@@ -12,7 +12,7 @@ export type Expenses = {
 };
 
 export type ExpensesResponse = {
-  expenses: Expenses[];
+  expenses: Expense[];
   balance: {
     totalExpense: number;
     totalIncome: number;

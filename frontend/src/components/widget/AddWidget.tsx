@@ -1,5 +1,5 @@
 import AddIcon from "@mui/icons-material/Add";
-import { Button, FormControl, Input, InputAdornment, InputLabel, MenuItem, Modal, Select, SelectChangeEvent, TextField } from "@mui/material";
+import { Button, FormControl, Input, InputAdornment, InputLabel, MenuItem, Modal, Select, TextField } from "@mui/material";
 import { Box } from "@mui/system";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 
 // Styles
 import { useRouter } from "next/router";
-import api from "../../services/api-client/api";
+import { apiClient } from "../../services/api-client/apiClient";
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -41,14 +41,19 @@ const AddWidget = ({ type }: AddWidgetProps) => {
     const { register, handleSubmit, reset, setValue } = useForm();
     const onSubmit = async (data: FormValues) => {
 
-        await api.post(`/${type}`, {
-            ...data,
-            amount: parseFloat(data.amount),
-        })
-        handleClose();
+        try {
+            await apiClient.post(`/${type}`, {
+                ...data,
+                amount: parseFloat(data.amount),
+            })
+            handleClose();
+            router.push(`/${type}`);
 
+        } catch (error) {
+            console.log(error);
 
-        router.push(`/${type}`);
+        }
+
 
     };
 
@@ -56,19 +61,14 @@ const AddWidget = ({ type }: AddWidgetProps) => {
 
     const [date, setDate] = useState(null);
 
-
-    const [age, setAge] = useState('');
-
-    const handleChange = (event: SelectChangeEvent) => {
-        setAge(event.target.value);
-    };
-
     const getCategories = async () => {
-        const { data: categories } = await api.get('/category');
+        try {
+            const { data: categories } = await apiClient.get('/category');
+            setCategories(categories);
 
-
-
-        setCategories(categories);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     const handleOpen = () => setOpen(true);
