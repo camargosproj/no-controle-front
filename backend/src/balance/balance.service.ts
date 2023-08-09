@@ -62,15 +62,15 @@ export default class BalanceService {
         userId,
       },
       update: {
-        expenseTotal: totalExpense._sum.amount,
-        incomeTotal: totalIncome._sum.amount,
-        balance: totalBalance,
+        expenseTotal: totalExpense._sum.amount || 0,
+        incomeTotal: totalIncome._sum.amount || 0,
+        balance: totalBalance || 0,
       },
       create: {
         userId,
-        expenseTotal: totalExpense._sum.amount,
-        incomeTotal: totalIncome._sum.amount,
-        balance: totalBalance,
+        expenseTotal: totalExpense._sum.amount || 0,
+        incomeTotal: totalIncome._sum.amount || 0,
+        balance: totalBalance || 0,
       },
       select: {
         expenseTotal: true,
