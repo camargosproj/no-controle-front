@@ -11,7 +11,7 @@ import { useAuth } from "../../services/contexts/useAuth";
 import styles from "./navbar.module.css";
 
 const NavBar = () => {
-    const { logout } = useAuth();
+    const { user, logout } = useAuth();
     return (
         <div className={styles.navbar}>
             <div className={styles.container}>
@@ -36,7 +36,7 @@ const NavBar = () => {
                         <div className={styles.notificationCounter}>1</div>
                         <div className={styles.item}>
                             <span>
-                                Olá, <b>Marcos</b>
+                                Olá, <b>{user?.name}</b>
                             </span>
                         </div>
                         <div className={styles.item}>

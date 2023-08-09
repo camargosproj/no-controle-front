@@ -6,14 +6,15 @@ import styles from './home.module.css';
 
 
 
-const HomePage = () => {
+
+const HomePage = ({ balance }: SummaryResponse) => {
     return (
         <div className={styles.home}>
             <div className={styles.homeContainer}>
                 <div className={styles.widgets}>
-                    <Widget type="rendimentos" data={{ description: 'Rendimentos', amount: 10000 }} />
-                    <Widget type="despesas" data={{ description: 'Despesas', amount: 5000 }} />
-                    <Widget type="saldo" data={{ description: 'Saldo', amount: 5000 }} />
+                    <Widget type="rendimentos" data={{ description: 'Rendimentos', amount: balance.totalIncome }} />
+                    <Widget type="despesas" data={{ description: 'Despesas', amount: balance.totalExpense }} />
+                    <Widget type="saldo" data={{ description: 'Saldo', amount: balance.totalBalance }} />
                 </div>
 
                 <div className={styles.charts}>
@@ -24,5 +25,7 @@ const HomePage = () => {
         </div >
     );
 }
+
+
 
 export default HomePage;

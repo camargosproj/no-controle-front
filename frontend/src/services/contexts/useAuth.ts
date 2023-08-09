@@ -76,7 +76,16 @@ export function useAuthProvider() {
     try {
       if (!cookieData) {
         router.push("/login");
+        return;
       }
+
+      const userData = JSON.parse(cookieData as string) as SinginResponse;
+      setUser({
+        id: userData.id,
+        name: userData.name,
+        email: userData.email,
+        validated: userData.validated,
+      });
     } catch (error) {
       router.push("/login");
     }
