@@ -23,6 +23,11 @@ const style = {
     p: 4,
 };
 
+const categoryType = {
+    income: 'Receitas',
+    expense: 'Despesas',
+}
+
 type AddWidgetProps = {
     type: 'income' | 'expense';
 }
@@ -63,7 +68,11 @@ const AddWidget = ({ type }: AddWidgetProps) => {
 
     const getCategories = async () => {
         try {
-            const { data: categories } = await apiClient.get('/category');
+            const { data: categories } = await apiClient.get('/category', {
+                params: {
+                    type: categoryType[type]
+                }
+            });
             setCategories(categories);
 
         } catch (error) {
