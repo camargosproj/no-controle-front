@@ -49,6 +49,13 @@ export default class IncomeService {
         userId,
         transactionGroupId,
       },
+      include: {
+        category: {
+          select: {
+            name: true,
+          },
+        },
+      },
     });
 
     const totalAmount = await this.balanceService.getTotalAmount(
@@ -69,6 +76,13 @@ export default class IncomeService {
       where: {
         id,
         userId,
+      },
+      include: {
+        category: {
+          select: {
+            name: true,
+          },
+        },
       },
     });
 

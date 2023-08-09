@@ -46,6 +46,13 @@ export default class ExpenseService {
         userId,
         transactionGroupId,
       },
+      include: {
+        category: {
+          select: {
+            name: true,
+          },
+        },
+      },
     });
 
     const totalAmount = await this.balanceService.getTotalAmount(
@@ -66,6 +73,13 @@ export default class ExpenseService {
       where: {
         id,
         userId,
+      },
+      include: {
+        category: {
+          select: {
+            name: true,
+          },
+        },
       },
     });
 
