@@ -9,7 +9,7 @@ const Expense = ({ expenses, balance }: ExpensesResponse) => {
     return (
         <div className="flex p-4 gap-2">
             <div className="w-1/4 sm:w-[10%] gap-4 flex flex-col">
-                <AddWidget />
+                <AddWidget type="expense" />
                 <Widget type="despesas" data={{ description: 'Despesas', amount: balance.totalExpense }} />
                 <Widget type="rendimentos" data={{ description: 'Rendimentos', amount: balance.totalIncome }} />
                 <Widget type="saldo" data={{ description: 'Saldo', amount: balance.totalBalance }} />

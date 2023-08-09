@@ -1,10 +1,8 @@
-import SideBar from "../../components/sidebar/SideBar";
-import NavBar from "../../components/navbar/NavBar";
-import Widget from "../../components/widget/Widget";
 import Chart from "../../components/chart/Chart";
 import Featured from "../../components/featured/Featured";
+import Widget from "../../components/widget/Widget";
 
-import styles from './home.module.css'
+import styles from './home.module.css';
 
 
 
@@ -13,9 +11,9 @@ const HomePage = () => {
         <div className={styles.home}>
             <div className={styles.homeContainer}>
                 <div className={styles.widgets}>
-                    <Widget type="rendimentos" data={{ description: 'Rendimentos', amount: '10000' }} />
-                    <Widget type="despesas" data={{ description: 'Despesas', amount: '5000' }} />
-                    <Widget type="saldo" data={{ description: 'Saldo', amount: '5000' }} />
+                    <Widget type="rendimentos" data={{ description: 'Rendimentos', amount: 10000 }} />
+                    <Widget type="despesas" data={{ description: 'Despesas', amount: 5000 }} />
+                    <Widget type="saldo" data={{ description: 'Saldo', amount: 5000 }} />
                 </div>
 
                 <div className={styles.charts}>

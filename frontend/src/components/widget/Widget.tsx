@@ -23,7 +23,7 @@ const Widget = ({ type, data }: WidgetData) => {
         case "rendimentos":
             data = {
                 ...data,
-                link: "/incomes",
+                link: "/income",
                 icon: (<MonetizationOnOutlined
                     className={styles.icon}
                     style={{
@@ -35,7 +35,7 @@ const Widget = ({ type, data }: WidgetData) => {
         case "despesas":
             data = {
                 ...data,
-                link: "/expenses",
+                link: "/expense",
                 icon: (<MonetizationOnOutlined
                     className={styles.icon}
                     style={{

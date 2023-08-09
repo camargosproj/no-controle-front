@@ -1,6 +1,5 @@
 import AddIcon from "@mui/icons-material/Add";
-import { Button, FormControl, Input, InputAdornment, InputLabel, MenuItem, Modal, Select, SelectChangeEvent } from "@mui/material";
-import TextField from '@mui/material/TextField';
+import { Button, FormControl, Input, InputAdornment, InputLabel, MenuItem, Modal, Select, SelectChangeEvent, TextField } from "@mui/material";
 import { Box } from "@mui/system";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -24,26 +23,38 @@ const style = {
     p: 4,
 };
 
-const AddWidget = () => {
+type AddWidgetProps = {
+    type: 'income' | 'expense';
+}
+
+type FormValues = {
+    description: string;
+    amount: string;
+    date: string;
+    category: string;
+}
+
+const AddWidget = ({ type }: AddWidgetProps) => {
     const [categories, setCategories] = useState<any>([]);
     const router = useRouter();
 
-    const { register, handleSubmit, watch, formState: { errors } } = useForm();
-    const onSubmit = async (data: any) => {
+    const { register, handleSubmit, reset, setValue } = useForm();
+    const onSubmit = async (data: FormValues) => {
 
-        const { data: transaction } = await api.post('/expense', {
+        await api.post(`/${type}`, {
             ...data,
             amount: parseFloat(data.amount),
-            date: value,
         })
         handleClose();
-        router.push('/expenses');
+
+
+        router.push(`/${type}`);
 
     };
 
     const [open, setOpen] = useState(false);
 
-    const [value, setValue] = useState(null);
+    const [date, setDate] = useState(null);
 
 
     const [age, setAge] = useState('');
@@ -61,7 +72,11 @@ const AddWidget = () => {
     }
 
     const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    const handleClose = () => {
+        setOpen(false)
+        reset();
+        setDate(null);
+    };
 
     useEffect(() => {
         getCategories();
@@ -79,11 +94,13 @@ const AddWidget = () => {
                     <form onSubmit={handleSubmit(onSubmit)}>
 
                         <FormControl fullWidth sx={{ m: 1 }} variant="standard">
-                            <InputLabel htmlFor="standard-adornment-amount">Decrição</InputLabel>
+                            <InputLabel htmlFor="standard-adornment-amount">Descrição</InputLabel>
                             <Input
                                 id="standard-adornment-amount"
                                 startAdornment={<InputAdornment position="start"></InputAdornment>}
-                                {...register("description")}
+                                {...register("description", {
+                                    required: true,
+                                })}
                             />
                         </FormControl>
                         <FormControl fullWidth sx={{ m: 1 }} variant="standard">
@@ -91,18 +108,25 @@ const AddWidget = () => {
                             <Input
                                 id="standard-adornment-amount"
                                 startAdornment={<InputAdornment position="start">$</InputAdornment>}
-                                {...register("amount")}
+                                {...register("amount", {
+                                    required: true,
+
+                                })}
                             />
                         </FormControl>
                         <FormControl fullWidth sx={{ m: 1 }} variant="standard">
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DatePicker
                                     label="Data"
-                                    value={value}
-                                    {...register("date")}
+                                    value={date}
+                                    {...register("date", {
+                                        required: true,
+
+                                    })}
                                     onChange={(newValue) => {
                                         const date = newValue?.format('YYYY-MM-DD');
-                                        setValue(date);
+                                        setDate(date);
+                                        setValue('date', date);
                                     }}
                                     renderInput={(params) => <TextField {...params} />}
                                 />
@@ -116,7 +140,9 @@ const AddWidget = () => {
                                 defaultValue={""}
                                 // onChange={handleChange}
                                 label="Categoria"
-                                {...register("categoryId")}
+                                {...register("categoryId", {
+                                    required: true,
+                                })}
                             >
                                 <MenuItem value="">
                                     <em>Escolha uma categoria</em>
@@ -130,7 +156,7 @@ const AddWidget = () => {
                         </FormControl>
 
                         <Box display={"flex"} justifyContent={"flex-end"}>
-                            <Button type="submit" variant="contained">Adicionar</Button>
+                            <Button type="submit" >Adicionar</Button>
                         </Box>
                     </form>
                 </Box>
