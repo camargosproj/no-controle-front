@@ -58,11 +58,18 @@ model Income {
   transactionGroupId String?
 }
 
+enum TransactionGroupType {
+  INCOME
+  EXPENSE
+}
+
 model TransactionGroup {
   id                     String                   @id @default(uuid())
   name                   String
   description            String
   totalAmount            Float                    @default(0)
+  isDefault              Boolean                  @default(false)
+  type                   TransactionGroupType
   expenses               Expense[]
   incomes                Income[]
   sharedTransactionGroup SharedTransactionGroup[]

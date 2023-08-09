@@ -11,15 +11,30 @@ export default class ExpenseService {
     this.balanceService = balanceService;
   }
   async create(expense: Expense) {
+    const transsactionDefaultGroup =
+      await this.prisma.transactionGroup.findFirst({
+        where: {
+          userId: expense.userId,
+          isDefault: true,
+          type: "EXPENSE",
+        },
+        select: {
+          id: true,
+        },
+      });
+
+    const transactionGroupId =
+      expense?.transactionGroupId || transsactionDefaultGroup.id;
     const expenseData = await this.prisma.expense.create({
       data: {
         ...expense,
+        transactionGroupId,
         date: new Date(expense.date),
       },
     });
 
     const totalAmount = await this.balanceService.updateTotalAmount(
-      expense.transactionGroupId,
+      transactionGroupId,
       "expense"
     );
     return { ...expenseData, totalAmount };

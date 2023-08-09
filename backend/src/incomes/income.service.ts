@@ -13,15 +13,31 @@ export default class IncomeService {
   }
 
   async create(income: Income) {
+    const transsactionDefaultGroup =
+      await this.prisma.transactionGroup.findFirst({
+        where: {
+          userId: income.userId,
+          isDefault: true,
+          type: "INCOME",
+        },
+        select: {
+          id: true,
+        },
+      });
+
+    const transactionGroupId =
+      income?.transactionGroupId || transsactionDefaultGroup.id;
+
     const incomeData = await this.prisma.income.create({
       data: {
         ...income,
+        transactionGroupId,
         date: new Date(income.date),
       },
     });
 
     const totalAmount = await this.balanceService.updateTotalAmount(
-      income.transactionGroupId,
+      transactionGroupId,
       "income"
     );
     return { ...incomeData, totalAmount };

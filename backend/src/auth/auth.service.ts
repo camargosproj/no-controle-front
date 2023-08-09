@@ -85,6 +85,24 @@ export default class AuthService {
         password: await hashPassword(password),
         verificationCode,
         verificationCodeExpiration,
+        TransactionGroup: {
+          createMany: {
+            data: [
+              {
+                name: "Geral - Minha Despesas",
+                description: "Grupo de transações de despesas",
+                isDefault: true,
+                type: "EXPENSE",
+              },
+              {
+                name: "Geral - Minhas Receitas",
+                description: "Grupo de transações de receitas",
+                isDefault: true,
+                type: "INCOME",
+              },
+            ],
+          },
+        },
       },
       select: {
         name: true,
@@ -93,7 +111,7 @@ export default class AuthService {
     });
 
     const message = this.emailService.getVerificationCodeMessage(
-      userExists.name,
+      newUser.name,
       verificationCode
     );
 
