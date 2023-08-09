@@ -30,16 +30,12 @@ const AddWidget = () => {
 
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
     const onSubmit = async (data: any) => {
-        const transactionGroupId = "0dda65d3-ee8f-4ef2-8061-3112ae61c943"
-        console.log(data);
 
         const { data: transaction } = await api.post('/expense', {
             ...data,
             amount: parseFloat(data.amount),
             date: value,
-            transactionGroupId
         })
-        console.log(transaction);
         handleClose();
         router.push('/expenses');
 

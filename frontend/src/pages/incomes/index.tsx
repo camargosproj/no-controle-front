@@ -11,7 +11,7 @@ const Incomes = ({ incomes }: IncomeResponse) => {
                 <div className={styles.homeContainer}>
                     <div className={styles.widgets}>
                         <AddWidget />
-                        {incomes.map((income, index) => (
+                        {incomes.length && incomes?.map((income, index) => (
                             <Widget key={index} type="rendimentos" data={income} />
                         ))}
                     </div>
@@ -24,7 +24,7 @@ const Incomes = ({ incomes }: IncomeResponse) => {
 // This gets called on every request
 export async function getServerSideProps() {
     // Fetch data from external API
-    const { data: incomes } = await api.get('/incomes');
+    const { data: incomes } = await api.get('/income');
 
     // Pass data to the page via props
     return { props: { incomes } };

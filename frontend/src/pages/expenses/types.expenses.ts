@@ -1,12 +1,14 @@
 export type Expenses = {
   id: string;
-  amount: string;
+  amount: number;
   description: string;
   date: string;
   categoryId: string;
   userId: string;
-  sharedAccountGroupId: string;
-  accountGroupId: string;
+  transactionGroupId: string;
+  category: {
+    name: string;
+  };
 };
 
 export type ExpensesResponse = {
