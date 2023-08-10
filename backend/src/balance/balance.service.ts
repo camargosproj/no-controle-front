@@ -9,14 +9,26 @@ export default class BalanceService {
     this.prisma = prisma;
   }
   async updateTotalAmount(transactionGroupId: string, type: BalanceModel) {
-    const totalAmount = await this.prisma[type].aggregate({
-      where: {
-        transactionGroupId,
-      },
-      _sum: {
-        amount: true,
-      },
-    });
+    let totalAmount;
+    if (type === "income") {
+      totalAmount = await this.prisma.income.aggregate({
+        where: {
+          transactionGroupId,
+        },
+        _sum: {
+          amount: true,
+        },
+      });
+    } else {
+      totalAmount = await this.prisma.expense.aggregate({
+        where: {
+          transactionGroupId,
+        },
+        _sum: {
+          amount: true,
+        },
+      });
+    }
 
     if (!totalAmount._sum.amount) {
       return;

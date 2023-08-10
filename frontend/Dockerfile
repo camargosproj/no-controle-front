@@ -1,11 +1,11 @@
-FROM node:18-alpine
+FROM node:18
 
 # Set working directory
 WORKDIR /app
 
 # Install dependencies
-COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
+COPY package.json ./
+RUN yarn
 
 # Copy app files
 COPY . .
