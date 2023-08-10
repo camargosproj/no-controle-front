@@ -25,11 +25,13 @@ model User {
 }
 
 model Category {
-  id      String    @id @default(uuid())
-  name    String    @unique
-  type    String
-  Expense Expense[]
-  Income  Income[]
+  id        String    @id @default(uuid())
+  name      String    @unique
+  type      String
+  updatedAt DateTime  @updatedAt
+  createdAt DateTime  @default(now())
+  Expense   Expense[]
+  Income    Income[]
 }
 
 model Expense {
@@ -43,6 +45,8 @@ model Expense {
   userId             String
   transactionGroup   TransactionGroup? @relation(fields: [transactionGroupId], references: [id])
   transactionGroupId String?
+  updatedAt          DateTime          @updatedAt
+  createdAt          DateTime          @default(now())
 }
 
 model Income {
@@ -56,6 +60,8 @@ model Income {
   userId             String
   transactionGroup   TransactionGroup? @relation(fields: [transactionGroupId], references: [id])
   transactionGroupId String?
+  updatedAt          DateTime          @updatedAt
+  createdAt          DateTime          @default(now())
 }
 
 enum TransactionGroupType {
@@ -75,15 +81,35 @@ model TransactionGroup {
   sharedTransactionGroup SharedTransactionGroup[]
   groupOwner             User?                    @relation(fields: [userId], references: [id])
   userId                 String?
+  updatedAt              DateTime                 @updatedAt
+  createdAt              DateTime                 @default(now())
+}
+
+enum MonthType {
+  JANUARY
+  FEBRUARY
+  MARCH
+  APRIL
+  MAY
+  JUNE
+  JULY
+  AUGUST
+  SEPTEMBER
+  OCTOBER
+  NOVEMBER
+  DECEMBER
 }
 
 model Balance {
-  id           String @id @default(uuid())
-  user         User   @relation(fields: [userId], references: [id])
-  userId       String @unique
-  incomeTotal  Float  @default(0)
-  expenseTotal Float  @default(0)
-  balance      Float  @default(0)
+  id           String    @id @default(uuid())
+  user         User      @relation(fields: [userId], references: [id])
+  userId       String
+  month        MonthType
+  incomeTotal  Float     @default(0)
+  expenseTotal Float     @default(0)
+  balance      Float     @default(0)
+  updatedAt    DateTime  @updatedAt
+  createdAt    DateTime  @default(now())
 }
 
 model SharedTransactionGroup {
@@ -92,4 +118,6 @@ model SharedTransactionGroup {
   transactionGroupId String
   sharedWith         User             @relation(fields: [userId], references: [id])
   userId             String
+  updatedAt          DateTime         @updatedAt
+  createdAt          DateTime         @default(now())
 }
