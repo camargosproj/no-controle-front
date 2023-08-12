@@ -1,10 +1,12 @@
-import { PrismaClient } from "@prisma/client";
+import { MonthType, PrismaClient } from "@prisma/client";
+import * as moment from "moment";
 import { hashPassword } from "../src/utils/util";
 
 const prisma = new PrismaClient();
 async function main() {
   const hash = await hashPassword("12345678");
   const user = {
+    id: "12ed6313-4e40-48ba-a15e-3e88c73aa992",
     email: "dev@dev.com",
     name: "dev",
     password: hash,
@@ -15,6 +17,28 @@ async function main() {
     where: { email: user.email },
     create: user,
     update: user,
+  });
+
+  await prisma.transactionGroup.createMany({
+    data: [
+      {
+        userId: user.id,
+        name: "Geral - Minha Despesas",
+        description: "Grupo de transações de despesas",
+        isDefault: true,
+        type: "EXPENSE",
+        month: moment().format("MMMM").toUpperCase().toUpperCase() as MonthType,
+      },
+      {
+        userId: user.id,
+        name: "Geral - Minhas Receitas",
+        description: "Grupo de transações de receitas",
+        isDefault: true,
+        type: "INCOME",
+        month: moment().format("MMMM").toUpperCase().toUpperCase() as MonthType,
+      },
+    ],
+    skipDuplicates: true,
   });
 
   const categories = [

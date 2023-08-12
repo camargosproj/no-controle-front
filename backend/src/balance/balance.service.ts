@@ -1,3 +1,5 @@
+import { MonthType } from "@prisma/client";
+import * as moment from "moment";
 import { PrismaService } from "../core/shared";
 import { NotFoundError } from "../errors";
 import { BalanceModel } from "./balance.interface";
@@ -8,7 +10,11 @@ export default class BalanceService {
   constructor(prisma: PrismaService) {
     this.prisma = prisma;
   }
-  async updateTotalAmount(transactionGroupId: string, type: BalanceModel) {
+  async updateTotalAmount(
+    transactionGroupId: string,
+    type: BalanceModel,
+    balanceMonthName: MonthType
+  ) {
     let totalAmount;
     if (type === "income") {
       totalAmount = await this.prisma.income.aggregate({
@@ -38,9 +44,11 @@ export default class BalanceService {
       this.prisma.transactionGroup.update({
         where: {
           id: transactionGroupId,
+          month: balanceMonthName.toUpperCase() as MonthType,
         },
         data: {
           totalAmount: totalAmount._sum.amount,
+          month: balanceMonthName.toUpperCase() as MonthType,
         },
       }),
     ]);
@@ -48,7 +56,10 @@ export default class BalanceService {
     return totalAmount._sum.amount;
   }
 
-  async getBalance(userId: string) {
+  async getBalance(userId: string, balanceMonthName?: MonthType) {
+    if (!balanceMonthName) {
+      balanceMonthName = moment().format("MMMM").toUpperCase() as MonthType;
+    }
     const totalExpense = await this.prisma.expense.aggregate({
       where: {
         userId,
@@ -69,40 +80,67 @@ export default class BalanceService {
 
     const totalBalance = totalIncome._sum.amount - totalExpense._sum.amount;
 
-    const data = await this.prisma.balance.upsert({
+    return await this.createOrUpdateBalance(userId, balanceMonthName, {
+      totalExpense: totalExpense._sum.amount,
+      totalIncome: totalIncome._sum.amount,
+      totalBalance,
+    });
+  }
+
+  async createOrUpdateBalance(
+    userId: string,
+    balanceMonthName: MonthType,
+    { totalExpense, totalIncome, totalBalance }
+  ) {
+    let balanceData;
+
+    const balance = await this.prisma.balance.findFirst({
       where: {
         userId,
-      },
-      update: {
-        expenseTotal: totalExpense._sum.amount || 0,
-        incomeTotal: totalIncome._sum.amount || 0,
-        balance: totalBalance || 0,
-      },
-      create: {
-        userId,
-        expenseTotal: totalExpense._sum.amount || 0,
-        incomeTotal: totalIncome._sum.amount || 0,
-        balance: totalBalance || 0,
-      },
-      select: {
-        expenseTotal: true,
-        incomeTotal: true,
-        balance: true,
+        month: balanceMonthName,
       },
     });
 
+    if (!balance) {
+      balanceData = await this.prisma.balance.create({
+        data: {
+          userId,
+          month: balanceMonthName,
+          incomeTotal: totalIncome || 0,
+          expenseTotal: totalExpense || 0,
+          balance: totalBalance || 0,
+        },
+      });
+    } else {
+      balanceData = await this.prisma.balance.update({
+        where: {
+          id: balance.id,
+        },
+        data: {
+          incomeTotal: totalIncome || 0,
+          expenseTotal: totalExpense || 0,
+          balance: totalBalance || 0,
+        },
+      });
+    }
+
     return {
-      totalExpense: data.expenseTotal,
-      totalIncome: data.incomeTotal,
-      totalBalance: data.balance,
+      totalExpense: balanceData.expenseTotal,
+      totalIncome: balanceData.incomeTotal,
+      totalBalance: balanceData.balance,
+      month: balanceData.month,
     };
   }
 
-  async getTotalAmount(transactionGroupId: string, type: BalanceModel) {
+  async getTotalAmount(
+    transactionGroupId: string,
+    type: BalanceModel,
+    balanceMonthName: MonthType
+  ) {
     if (!transactionGroupId) {
       return;
     }
-    await this.updateTotalAmount(transactionGroupId, type);
+    await this.updateTotalAmount(transactionGroupId, type, balanceMonthName);
 
     const group = await this.prisma.transactionGroup.findFirst({
       where: {

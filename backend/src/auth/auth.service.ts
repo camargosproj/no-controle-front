@@ -1,3 +1,4 @@
+import { MonthType } from "@prisma/client";
 import * as jwt from "jsonwebtoken";
 import * as moment from "moment";
 import BalanceService from "../balance/balance.service";
@@ -118,12 +119,20 @@ export default class AuthService {
                 description: "Grupo de transações de despesas",
                 isDefault: true,
                 type: "EXPENSE",
+                month: moment()
+                  .format("MMMM")
+                  .toUpperCase()
+                  .toUpperCase() as MonthType,
               },
               {
                 name: "Geral - Minhas Receitas",
                 description: "Grupo de transações de receitas",
                 isDefault: true,
                 type: "INCOME",
+                month: moment()
+                  .format("MMMM")
+                  .toUpperCase()
+                  .toUpperCase() as MonthType,
               },
             ],
           },

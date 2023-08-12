@@ -1,3 +1,5 @@
+import { MonthType } from "@prisma/client";
+import * as moment from "moment";
 import BalanceService from "../balance/balance.service";
 import { PrismaService } from "../core/shared";
 import { NotFoundError } from "../errors";
@@ -36,14 +38,20 @@ export default class IncomeService {
       },
     });
 
+    const balanceMonthName = moment(income.date).format("MMMM");
+
     const totalAmount = await this.balanceService.updateTotalAmount(
       transactionGroupId,
-      "income"
+      "income",
+      balanceMonthName as MonthType
     );
     return { ...incomeData, totalAmount };
   }
 
-  async findAll(userId: string, transactionGroupId: string) {
+  async findAll(userId: string, transactionGroupId: string, month?: string) {
+    if (!month) {
+      month = moment().format("MMMM").toUpperCase();
+    }
     let data = await this.prisma.income.findMany({
       where: {
         userId,
@@ -60,14 +68,15 @@ export default class IncomeService {
 
     const totalAmount = await this.balanceService.getTotalAmount(
       transactionGroupId,
-      "income"
+      "income",
+      month as MonthType
     );
     if (totalAmount) {
       return [...data, { totalAmount }];
     }
     return {
       data: data,
-      balance: await this.balanceService.getBalance(userId),
+      balance: await this.balanceService.getBalance(userId, month as MonthType),
     };
   }
 
@@ -106,18 +115,22 @@ export default class IncomeService {
       },
     });
 
+    const balanceMonthName = moment(updatedIncome.date).format("MMMM");
+
     if (
       data.transactionGroupId &&
       income.transactionGroupId !== data.transactionGroupId
     ) {
       await this.balanceService.updateTotalAmount(
         income.transactionGroupId,
-        "income"
+        "income",
+        balanceMonthName as MonthType
       );
     } else {
       await this.balanceService.updateTotalAmount(
         updatedIncome.transactionGroupId,
-        "income"
+        "income",
+        balanceMonthName as MonthType
       );
     }
 
@@ -127,15 +140,17 @@ export default class IncomeService {
   async delete(userId: string, id: string) {
     await this.findOne(userId, id);
 
-    const updatedIncome = await this.prisma.income.delete({
+    const deletedIncome = await this.prisma.income.delete({
       where: {
         id,
       },
     });
+    const balanceMonthName = moment(deletedIncome.date).format("MMMM");
 
     await this.balanceService.updateTotalAmount(
-      updatedIncome.transactionGroupId,
-      "income"
+      deletedIncome.transactionGroupId,
+      "income",
+      balanceMonthName as MonthType
     );
 
     return;

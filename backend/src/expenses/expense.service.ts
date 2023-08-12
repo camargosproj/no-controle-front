@@ -1,3 +1,5 @@
+import { MonthType } from "@prisma/client";
+import * as moment from "moment";
 import BalanceService from "../balance/balance.service";
 import { PrismaService } from "../core/shared";
 import { NotFoundError } from "../errors";
@@ -11,7 +13,7 @@ export default class ExpenseService {
     this.balanceService = balanceService;
   }
   async create(expense: Expense) {
-    const transsactionDefaultGroup =
+    const transactionDefaultGroup =
       await this.prisma.transactionGroup.findFirst({
         where: {
           userId: expense.userId,
@@ -24,7 +26,7 @@ export default class ExpenseService {
       });
 
     const transactionGroupId =
-      expense?.transactionGroupId || transsactionDefaultGroup.id;
+      expense?.transactionGroupId || transactionDefaultGroup.id;
     const expenseData = await this.prisma.expense.create({
       data: {
         ...expense,
@@ -33,14 +35,21 @@ export default class ExpenseService {
       },
     });
 
+    const balanceMonthName = moment(expense.date).format("MMMM");
+
     const totalAmount = await this.balanceService.updateTotalAmount(
       transactionGroupId,
-      "expense"
+      "expense",
+      balanceMonthName as MonthType
     );
     return { ...expenseData, totalAmount };
   }
 
-  async findAll(userId: string, transactionGroupId: string) {
+  async findAll(userId: string, transactionGroupId: string, month?: string) {
+    if (!month) {
+      month = moment().format("MMMM").toUpperCase();
+    }
+
     let data = await this.prisma.expense.findMany({
       where: {
         userId,
@@ -57,14 +66,15 @@ export default class ExpenseService {
 
     const totalAmount = await this.balanceService.getTotalAmount(
       transactionGroupId,
-      "expense"
+      "expense",
+      month as MonthType
     );
     if (totalAmount) {
       return [...data, { totalAmount }];
     }
     return {
       data: data,
-      balance: await this.balanceService.getBalance(userId),
+      balance: await this.balanceService.getBalance(userId, month as MonthType),
     };
   }
 
@@ -103,15 +113,19 @@ export default class ExpenseService {
       },
     });
 
+    const balanceMonthName = moment(updatedExpense.date).format("MMMM");
+
     if (expense.transactionGroupId !== data.transactionGroupId) {
       await this.balanceService.updateTotalAmount(
         expense.transactionGroupId,
-        "expense"
+        "expense",
+        balanceMonthName as MonthType
       );
     }
     await this.balanceService.updateTotalAmount(
       data.transactionGroupId,
-      "expense"
+      "expense",
+      balanceMonthName as MonthType
     );
 
     return updatedExpense;
@@ -120,15 +134,18 @@ export default class ExpenseService {
   async delete(userId: string, id: string) {
     await this.findOne(userId, id);
 
-    const updatedExpense = await this.prisma.expense.delete({
+    const deletedExpense = await this.prisma.expense.delete({
       where: {
         id,
       },
     });
 
+    const balanceMonthName = moment(deletedExpense.date).format("MMMM");
+
     await this.balanceService.updateTotalAmount(
-      updatedExpense.transactionGroupId,
-      "expense"
+      deletedExpense.transactionGroupId,
+      "expense",
+      balanceMonthName as MonthType
     );
 
     return;
