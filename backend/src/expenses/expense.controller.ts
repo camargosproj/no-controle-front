@@ -1,5 +1,7 @@
+import { MonthType } from "@prisma/client";
 import { Request, Response, Router } from "express";
 import { IController } from "../core/interfaces";
+import { BadRequestError } from "../errors";
 import { toAsyncRouter } from "../middlewares/error.middleware";
 import { Expense } from "./expense.interface";
 import ExpenseService from "./expense.service";
@@ -34,11 +36,25 @@ export default class ExpenseController implements IController {
 
   findAll = async (req: Request, res: Response) => {
     const { id: userId } = req.authUser;
-    const { transactionGroupId, month } = req.query;
+    let { transactionGroupId, month } = req.query as {
+      transactionGroupId: string;
+      month: MonthType;
+    };
+
+    if (month && !MonthType[month.toUpperCase() as MonthType]) {
+      throw new BadRequestError(
+        "Month must be one of these values: " + Object.keys(MonthType)
+      );
+    }
+
+    if (month) {
+      month = month.toUpperCase() as MonthType;
+    }
+
     const data = await this.expenseService.findAll(
       userId,
       transactionGroupId as string,
-      month as string
+      month as MonthType
     );
 
     res.json(data);

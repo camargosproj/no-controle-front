@@ -13,13 +13,17 @@ export default class BalanceService {
   async updateTotalAmount(
     transactionGroupId: string,
     type: BalanceModel,
-    balanceMonthName: MonthType
+    month: MonthType
   ) {
+    month = month.toUpperCase() as MonthType;
     let totalAmount;
     if (type === "income") {
       totalAmount = await this.prisma.income.aggregate({
         where: {
           transactionGroupId,
+          transactionGroup: {
+            month,
+          },
         },
         _sum: {
           amount: true,
@@ -29,6 +33,9 @@ export default class BalanceService {
       totalAmount = await this.prisma.expense.aggregate({
         where: {
           transactionGroupId,
+          transactionGroup: {
+            month,
+          },
         },
         _sum: {
           amount: true,
@@ -44,11 +51,11 @@ export default class BalanceService {
       this.prisma.transactionGroup.update({
         where: {
           id: transactionGroupId,
-          month: balanceMonthName.toUpperCase() as MonthType,
+          month: month as MonthType,
         },
         data: {
           totalAmount: totalAmount._sum.amount,
-          month: balanceMonthName.toUpperCase() as MonthType,
+          month: month as MonthType,
         },
       }),
     ]);
@@ -56,13 +63,18 @@ export default class BalanceService {
     return totalAmount._sum.amount;
   }
 
-  async getBalance(userId: string, balanceMonthName?: MonthType) {
-    if (!balanceMonthName) {
-      balanceMonthName = moment().format("MMMM").toUpperCase() as MonthType;
+  async getBalance(userId: string, month?: MonthType) {
+    if (!month) {
+      month = moment().format("MMMM").toUpperCase() as MonthType;
+    } else {
+      month = month.toUpperCase() as MonthType;
     }
     const totalExpense = await this.prisma.expense.aggregate({
       where: {
         userId,
+        transactionGroup: {
+          month: month,
+        },
       },
       _sum: {
         amount: true,
@@ -72,6 +84,9 @@ export default class BalanceService {
     const totalIncome = await this.prisma.income.aggregate({
       where: {
         userId,
+        transactionGroup: {
+          month: month,
+        },
       },
       _sum: {
         amount: true,
@@ -80,7 +95,7 @@ export default class BalanceService {
 
     const totalBalance = totalIncome._sum.amount - totalExpense._sum.amount;
 
-    return await this.createOrUpdateBalance(userId, balanceMonthName, {
+    return await this.createOrUpdateBalance(userId, month, {
       totalExpense: totalExpense._sum.amount,
       totalIncome: totalIncome._sum.amount,
       totalBalance,
@@ -89,7 +104,7 @@ export default class BalanceService {
 
   async createOrUpdateBalance(
     userId: string,
-    balanceMonthName: MonthType,
+    month: MonthType,
     { totalExpense, totalIncome, totalBalance }
   ) {
     let balanceData;
@@ -97,7 +112,7 @@ export default class BalanceService {
     const balance = await this.prisma.balance.findFirst({
       where: {
         userId,
-        month: balanceMonthName,
+        month: month,
       },
     });
 
@@ -105,7 +120,7 @@ export default class BalanceService {
       balanceData = await this.prisma.balance.create({
         data: {
           userId,
-          month: balanceMonthName,
+          month: month,
           incomeTotal: totalIncome || 0,
           expenseTotal: totalExpense || 0,
           balance: totalBalance || 0,
@@ -135,16 +150,18 @@ export default class BalanceService {
   async getTotalAmount(
     transactionGroupId: string,
     type: BalanceModel,
-    balanceMonthName: MonthType
+    month: MonthType
   ) {
+    month = month.toUpperCase() as MonthType;
     if (!transactionGroupId) {
       return;
     }
-    await this.updateTotalAmount(transactionGroupId, type, balanceMonthName);
+    await this.updateTotalAmount(transactionGroupId, type, month);
 
     const group = await this.prisma.transactionGroup.findFirst({
       where: {
         id: transactionGroupId,
+        month: month as MonthType,
       },
       select: {
         totalAmount: true,

@@ -6,29 +6,42 @@ import { NotFoundError } from "../errors";
 import { Income } from "./incomes.interface";
 
 export default class IncomeService {
-  private prisma: PrismaService;
-  private balanceService: BalanceService;
-
-  constructor(prisma: PrismaService, balanceService: BalanceService) {
-    this.prisma = prisma;
-    this.balanceService = balanceService;
-  }
+  constructor(
+    private prisma: PrismaService,
+    private balanceService: BalanceService
+  ) {}
 
   async create(income: Income) {
-    const transsactionDefaultGroup =
-      await this.prisma.transactionGroup.findFirst({
-        where: {
+    const balanceMonthName = moment(income.date).format("MMMM").toUpperCase();
+    let transactionDefaultGroup;
+    transactionDefaultGroup = await this.prisma.transactionGroup.findFirst({
+      where: {
+        userId: income.userId,
+        isDefault: true,
+        month: balanceMonthName as MonthType,
+        type: "INCOME",
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!transactionDefaultGroup) {
+      // create default transaction group for the month
+      transactionDefaultGroup = await this.prisma.transactionGroup.create({
+        data: {
+          name: "Geral - Minhas Receitas",
+          description: "Grupo de transações de receitas",
           userId: income.userId,
           isDefault: true,
+          month: balanceMonthName as MonthType,
           type: "INCOME",
         },
-        select: {
-          id: true,
-        },
       });
+    }
 
     const transactionGroupId =
-      income?.transactionGroupId || transsactionDefaultGroup.id;
+      income?.transactionGroupId || transactionDefaultGroup.id;
 
     const incomeData = await this.prisma.income.create({
       data: {
@@ -37,8 +50,6 @@ export default class IncomeService {
         date: new Date(income.date),
       },
     });
-
-    const balanceMonthName = moment(income.date).format("MMMM");
 
     const totalAmount = await this.balanceService.updateTotalAmount(
       transactionGroupId,
@@ -56,6 +67,9 @@ export default class IncomeService {
       where: {
         userId,
         transactionGroupId,
+        transactionGroup: {
+          month: month as MonthType,
+        },
       },
       include: {
         category: {

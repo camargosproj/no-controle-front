@@ -13,17 +13,33 @@ export default class ExpenseService {
     this.balanceService = balanceService;
   }
   async create(expense: Expense) {
-    const transactionDefaultGroup =
-      await this.prisma.transactionGroup.findFirst({
-        where: {
+    const balanceMonthName = moment(expense.date).format("MMMM").toUpperCase();
+    let transactionDefaultGroup;
+    transactionDefaultGroup = await this.prisma.transactionGroup.findFirst({
+      where: {
+        userId: expense.userId,
+        isDefault: true,
+        type: "EXPENSE",
+        month: balanceMonthName as MonthType,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!transactionDefaultGroup) {
+      // create default transaction group for the month
+      transactionDefaultGroup = await this.prisma.transactionGroup.create({
+        data: {
+          name: "Geral - Minha Despesas",
+          description: "Grupo de transações de despesas",
           userId: expense.userId,
           isDefault: true,
+          month: balanceMonthName as MonthType,
           type: "EXPENSE",
         },
-        select: {
-          id: true,
-        },
       });
+    }
 
     const transactionGroupId =
       expense?.transactionGroupId || transactionDefaultGroup.id;
@@ -35,8 +51,6 @@ export default class ExpenseService {
       },
     });
 
-    const balanceMonthName = moment(expense.date).format("MMMM");
-
     const totalAmount = await this.balanceService.updateTotalAmount(
       transactionGroupId,
       "expense",
@@ -45,15 +59,18 @@ export default class ExpenseService {
     return { ...expenseData, totalAmount };
   }
 
-  async findAll(userId: string, transactionGroupId: string, month?: string) {
+  async findAll(userId: string, transactionGroupId: string, month?: MonthType) {
     if (!month) {
-      month = moment().format("MMMM").toUpperCase();
+      month = moment().format("MMMM").toUpperCase() as MonthType;
     }
 
     let data = await this.prisma.expense.findMany({
       where: {
         userId,
         transactionGroupId,
+        transactionGroup: {
+          month: month,
+        },
       },
       include: {
         category: {
