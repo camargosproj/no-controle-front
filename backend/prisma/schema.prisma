@@ -76,6 +76,7 @@ model TransactionGroup {
   totalAmount            Float                    @default(0)
   isDefault              Boolean                  @default(false)
   month                  MonthType
+  year                   String
   type                   TransactionGroupType
   expenses               Expense[]
   incomes                Income[]
@@ -109,6 +110,7 @@ model Balance {
   expenseTotal Float     @default(0)
   balance      Float     @default(0)
   month        MonthType
+  year         String
   updatedAt    DateTime  @updatedAt
   createdAt    DateTime  @default(now())
 }

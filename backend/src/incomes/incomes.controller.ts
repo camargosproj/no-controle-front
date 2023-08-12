@@ -36,9 +36,10 @@ export default class IncomesController implements IController {
 
   findAll = async (req: Request, res: Response) => {
     const { id: userId } = req.authUser;
-    let { transactionGroupId, month } = req.query as {
+    let { transactionGroupId, month, year } = req.query as {
       transactionGroupId: string;
       month: MonthType;
+      year: string;
     };
 
     if (month && !MonthType[month.toUpperCase() as MonthType]) {
@@ -54,7 +55,8 @@ export default class IncomesController implements IController {
     const data = await this.incomeService.findAll(
       userId,
       transactionGroupId as string,
-      month as string
+      month as string,
+      year
     );
 
     res.json(data);

@@ -14,6 +14,7 @@ export default class ExpenseService {
   }
   async create(expense: Expense) {
     const balanceMonthName = moment(expense.date).format("MMMM").toUpperCase();
+    const year = moment(expense.date).format("YYYY");
     let transactionDefaultGroup;
     transactionDefaultGroup = await this.prisma.transactionGroup.findFirst({
       where: {
@@ -21,6 +22,7 @@ export default class ExpenseService {
         isDefault: true,
         type: "EXPENSE",
         month: balanceMonthName as MonthType,
+        year,
       },
       select: {
         id: true,
@@ -37,6 +39,7 @@ export default class ExpenseService {
           isDefault: true,
           month: balanceMonthName as MonthType,
           type: "EXPENSE",
+          year,
         },
       });
     }
@@ -54,14 +57,23 @@ export default class ExpenseService {
     const totalAmount = await this.balanceService.updateTotalAmount(
       transactionGroupId,
       "expense",
-      balanceMonthName as MonthType
+      balanceMonthName as MonthType,
+      year
     );
     return { ...expenseData, totalAmount };
   }
 
-  async findAll(userId: string, transactionGroupId: string, month?: MonthType) {
+  async findAll(
+    userId: string,
+    transactionGroupId: string,
+    month?: MonthType,
+    year?: string
+  ) {
     if (!month) {
       month = moment().format("MMMM").toUpperCase() as MonthType;
+    }
+    if (!year) {
+      year = moment().format("YYYY");
     }
 
     let data = await this.prisma.expense.findMany({
@@ -70,6 +82,7 @@ export default class ExpenseService {
         transactionGroupId,
         transactionGroup: {
           month: month,
+          year,
         },
       },
       include: {
@@ -84,7 +97,8 @@ export default class ExpenseService {
     const totalAmount = await this.balanceService.getTotalAmount(
       transactionGroupId,
       "expense",
-      month as MonthType
+      month as MonthType,
+      year
     );
     if (totalAmount) {
       return [...data, { totalAmount }];
@@ -131,18 +145,21 @@ export default class ExpenseService {
     });
 
     const balanceMonthName = moment(updatedExpense.date).format("MMMM");
+    const year = moment(updatedExpense.date).format("YYYY");
 
     if (expense.transactionGroupId !== data.transactionGroupId) {
       await this.balanceService.updateTotalAmount(
         expense.transactionGroupId,
         "expense",
-        balanceMonthName as MonthType
+        balanceMonthName as MonthType,
+        year
       );
     }
     await this.balanceService.updateTotalAmount(
       data.transactionGroupId,
       "expense",
-      balanceMonthName as MonthType
+      balanceMonthName as MonthType,
+      year
     );
 
     return updatedExpense;
@@ -158,11 +175,13 @@ export default class ExpenseService {
     });
 
     const balanceMonthName = moment(deletedExpense.date).format("MMMM");
+    const year = moment(deletedExpense.date).format("YYYY");
 
     await this.balanceService.updateTotalAmount(
       deletedExpense.transactionGroupId,
       "expense",
-      balanceMonthName as MonthType
+      balanceMonthName as MonthType,
+      year
     );
 
     return;

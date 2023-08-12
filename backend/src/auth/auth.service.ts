@@ -123,6 +123,7 @@ export default class AuthService {
                   .format("MMMM")
                   .toUpperCase()
                   .toUpperCase() as MonthType,
+                year: moment().format("YYYY"),
               },
               {
                 name: "Geral - Minhas Receitas",
@@ -133,6 +134,7 @@ export default class AuthService {
                   .format("MMMM")
                   .toUpperCase()
                   .toUpperCase() as MonthType,
+                year: moment().format("YYYY"),
               },
             ],
           },

@@ -13,7 +13,8 @@ export default class BalanceService {
   async updateTotalAmount(
     transactionGroupId: string,
     type: BalanceModel,
-    month: MonthType
+    month: MonthType,
+    year: string
   ) {
     month = month.toUpperCase() as MonthType;
     let totalAmount;
@@ -23,6 +24,7 @@ export default class BalanceService {
           transactionGroupId,
           transactionGroup: {
             month,
+            year,
           },
         },
         _sum: {
@@ -35,6 +37,7 @@ export default class BalanceService {
           transactionGroupId,
           transactionGroup: {
             month,
+            year,
           },
         },
         _sum: {
@@ -52,10 +55,12 @@ export default class BalanceService {
         where: {
           id: transactionGroupId,
           month: month as MonthType,
+          year,
         },
         data: {
           totalAmount: totalAmount._sum.amount,
           month: month as MonthType,
+          year,
         },
       }),
     ]);
@@ -63,9 +68,10 @@ export default class BalanceService {
     return totalAmount._sum.amount;
   }
 
-  async getBalance(userId: string, month?: MonthType) {
-    if (!month) {
+  async getBalance(userId: string, month?: MonthType, year?: string) {
+    if (!month && !year) {
       month = moment().format("MMMM").toUpperCase() as MonthType;
+      year = moment().format("YYYY");
     } else {
       month = month.toUpperCase() as MonthType;
     }
@@ -74,6 +80,7 @@ export default class BalanceService {
         userId,
         transactionGroup: {
           month: month,
+          year,
         },
       },
       _sum: {
@@ -86,6 +93,7 @@ export default class BalanceService {
         userId,
         transactionGroup: {
           month: month,
+          year,
         },
       },
       _sum: {
@@ -95,7 +103,7 @@ export default class BalanceService {
 
     const totalBalance = totalIncome._sum.amount - totalExpense._sum.amount;
 
-    return await this.createOrUpdateBalance(userId, month, {
+    return await this.createOrUpdateBalance(userId, month, year, {
       totalExpense: totalExpense._sum.amount,
       totalIncome: totalIncome._sum.amount,
       totalBalance,
@@ -105,6 +113,7 @@ export default class BalanceService {
   async createOrUpdateBalance(
     userId: string,
     month: MonthType,
+    year: string,
     { totalExpense, totalIncome, totalBalance }
   ) {
     let balanceData;
@@ -113,6 +122,7 @@ export default class BalanceService {
       where: {
         userId,
         month: month,
+        year,
       },
     });
 
@@ -121,6 +131,7 @@ export default class BalanceService {
         data: {
           userId,
           month: month,
+          year,
           incomeTotal: totalIncome || 0,
           expenseTotal: totalExpense || 0,
           balance: totalBalance || 0,
@@ -136,6 +147,13 @@ export default class BalanceService {
           expenseTotal: totalExpense || 0,
           balance: totalBalance || 0,
         },
+        select: {
+          expenseTotal: true,
+          incomeTotal: true,
+          balance: true,
+          month: true,
+          year: true,
+        },
       });
     }
 
@@ -144,24 +162,27 @@ export default class BalanceService {
       totalIncome: balanceData.incomeTotal,
       totalBalance: balanceData.balance,
       month: balanceData.month,
+      year: balanceData.year,
     };
   }
 
   async getTotalAmount(
     transactionGroupId: string,
     type: BalanceModel,
-    month: MonthType
+    month: MonthType,
+    year: string
   ) {
     month = month.toUpperCase() as MonthType;
     if (!transactionGroupId) {
       return;
     }
-    await this.updateTotalAmount(transactionGroupId, type, month);
+    await this.updateTotalAmount(transactionGroupId, type, month, year);
 
     const group = await this.prisma.transactionGroup.findFirst({
       where: {
         id: transactionGroupId,
         month: month as MonthType,
+        year,
       },
       select: {
         totalAmount: true,
