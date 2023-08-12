@@ -1,10 +1,12 @@
 import * as cors from "cors";
 import * as express from "express";
 import * as expressMonitor from "express-status-monitor";
+import * as morgan from "morgan";
 import { IController } from "./core/interfaces";
 import { authMiddleware } from "./middlewares/auth.middleware";
 import { errorHandler } from "./middlewares/error.middleware";
 import { envConfig } from "./utils/validateEnv";
+
 class App {
   public app: express.Application;
   private controllers: IController[];
@@ -12,6 +14,11 @@ class App {
   constructor(controllers: IController[]) {
     this.controllers = controllers;
     this.app = express();
+    console.log(
+      "\x1b[33m%s\x1b[0m",
+      `-- Starting ${envConfig.NODE_ENV} server`
+    );
+
     this.initializeMiddlewares();
     this.initializeControllers();
     this.initializeErrorHandling();
@@ -22,6 +29,8 @@ class App {
     this.app.use(cors());
 
     this.app.use(express.json());
+    this.app.use(morgan("dev"));
+
     this.app.use(expressMonitor());
     this.initializePublicControllers();
     // Auth middleware
