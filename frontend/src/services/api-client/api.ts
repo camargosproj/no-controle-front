@@ -1,11 +1,12 @@
 import axios from "axios";
 import { getCookie } from "cookies-next";
+import { API_URL } from "../config";
 
 const COOKIE_KEY = process.env.NEXT_PUBLIC_AUTH_COOKIE_KEY || "auth_cookie";
 
 const isServer = typeof window === "undefined";
 
-const baseURL = isServer ? "http://backend:4000" : "http://localhost:4000";
+const baseURL = API_URL;
 function apiClientInstance(ctx = null) {
   let cookies = null;
   if (ctx) {
