@@ -1,8 +1,3 @@
-
-// Styles
-import styles from "./widget.module.css";
-
-// Third-party libraries
 import { AccountBalanceWalletOutlined, KeyboardArrowDown, MonetizationOnOutlined } from "@mui/icons-material";
 
 import Link from "next/link";
@@ -25,10 +20,7 @@ const Widget = ({ type, data }: WidgetData) => {
                 ...data,
                 link: "/income",
                 icon: (<MonetizationOnOutlined
-                    className={styles.icon}
-                    style={{
-                        color: "white",
-                    }}
+                    className={`text-primary text-4xl self-end`}
                 />),
             };
             break;
@@ -37,10 +29,7 @@ const Widget = ({ type, data }: WidgetData) => {
                 ...data,
                 link: "/expense",
                 icon: (<MonetizationOnOutlined
-                    className={styles.icon}
-                    style={{
-                        color: "white",
-                    }}
+                    className={` text-primary text-4xl self-end`}
                 />),
             };
             break;
@@ -49,10 +38,7 @@ const Widget = ({ type, data }: WidgetData) => {
                 ...data,
                 link: "/saldo",
                 icon: (<AccountBalanceWalletOutlined
-                    className={styles.icon}
-                    style={{
-                        color: "white",
-                    }}
+                    className={`text-primary text-4xl self-end `}
                 />),
             };
             break;
@@ -61,16 +47,17 @@ const Widget = ({ type, data }: WidgetData) => {
     }
 
     return (
-        <div className={styles.widget}>
-            <div className={styles.left}>
-                <span className={styles.title}>{data.description}</span>
-                <span className={styles.counter}>{Number(data.amount).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</span>
+
+        <div className={`flex shadow-md rounded-md justify-between p-4`}>
+            <div className={`flex justify-between flex-col`}>
+                <span >{data.description}</span>
+                <span >{Number(data.amount).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</span>
                 <Link href={data.link as string}>
-                    <span className={styles.link}>Ver mais</span>
+                    <span>Ver mais</span>
                 </Link>
             </div>
-            <div className={styles.right}>
-                <div className={`${styles.percentage} ${styles.positive}`}>
+            <div className={`flex flex-col gap-2`}>
+                <div className={`text-green-500`}>
                     <KeyboardArrowDown />
                     20%
                 </div>
