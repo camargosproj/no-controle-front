@@ -28,6 +28,7 @@ async function main() {
         isDefault: true,
         type: "EXPENSE",
         month: moment().format("MMMM").toUpperCase().toUpperCase() as MonthType,
+        year: moment().format("YYYY"),
       },
       {
         userId: user.id,
@@ -36,6 +37,7 @@ async function main() {
         isDefault: true,
         type: "INCOME",
         month: moment().format("MMMM").toUpperCase().toUpperCase() as MonthType,
+        year: moment().format("YYYY"),
       },
     ],
     skipDuplicates: true,

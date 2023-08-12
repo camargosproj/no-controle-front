@@ -1,0 +1,13 @@
+{
+    "watch": [
+        "src",
+        "prisma",
+        "local"
+    ],
+    "ext": "ts,json",
+    "ignore": [
+        "src/**/*.spec.ts",
+        "node_modules"
+    ],
+    "exec": "tsc --noEmit && ts-node ./src/server.ts"
+}
