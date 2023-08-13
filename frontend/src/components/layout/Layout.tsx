@@ -3,7 +3,6 @@ import NavBar from "../navbar/NavBar";
 
 
 import { useRouter } from "next/router";
-import styles from "./layout.module.css";
 
 type LayoutProps = {
     children: ReactNode;
@@ -16,12 +15,12 @@ const Layout = ({ children }: LayoutProps) => {
 
     return (
         <>
-            <div className={styles.home}>
-                <div className={styles.homeContainer}>
+            <div className={``}>
+                <>
                     {router.pathname !== '/login' ? < NavBar /> : null}
                     {children}
 
-                </div>
+                </>
             </div>
 
         </>

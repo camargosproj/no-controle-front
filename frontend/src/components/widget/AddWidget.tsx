@@ -70,7 +70,7 @@ const AddWidget = ({ type }: AddWidgetProps) => {
         try {
             const { data: categories } = await apiClient.get('/category', {
                 params: {
-                    type: categoryType[type.replace('/', '')]
+                    type: categoryType[type]
                 }
             });
             setCategories(categories);

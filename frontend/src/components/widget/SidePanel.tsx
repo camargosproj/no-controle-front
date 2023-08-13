@@ -14,7 +14,7 @@ const SidePanel = ({ totalBalance, totalExpense, totalIncome }: SidePanelProps) 
     const { pathname } = useRouter();
     return (
         <div className="w-1/3 sm:min-w-[10%] sm:max-w-[13%] gap-4 flex flex-col">
-            <AddWidget type={pathname as "income" | "expense"} />
+            <AddWidget type={pathname.replace('/', '') as "income" | "expense"} />
             <Filter />
             <Widget type="despesas" data={{ description: 'Despesas', amount: totalExpense }} />
             <Widget type="rendimentos" data={{ description: 'Rendimentos', amount: totalIncome }} />

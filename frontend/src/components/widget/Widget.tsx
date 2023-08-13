@@ -48,7 +48,7 @@ const Widget = ({ type, data }: WidgetData) => {
 
     return (
 
-        <div className={`flex shadow-md rounded-md justify-between p-4`}>
+        <div className={`flex shadow-md rounded-md justify-between p-4 w-full`}>
             <div className={`flex justify-between flex-col`}>
                 <span >{data.description}</span>
                 <span >{Number(data.amount).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</span>

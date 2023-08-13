@@ -1,7 +1,14 @@
-
 // Styles
-import styles from "./chart.module.css";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import {
+    Bar,
+    BarChart,
+    CartesianGrid,
+    Legend,
+    ResponsiveContainer,
+    Tooltip,
+    XAxis,
+    YAxis,
+} from "recharts";
 
 const data = [
     { name: "Janeiro", Total: 1200 },
@@ -10,8 +17,8 @@ const data = [
     { name: "Abril", Total: 1600 },
     { name: "Maio", Total: 900 },
     { name: "Junho", Total: 1700 },
-    { name: "Agosto", Total: 1300 },
     { name: "Julho", Total: 1300 },
+    { name: "Agosto", Total: 1300 },
     { name: "Setembro", Total: 1500 },
     { name: "Outubro", Total: 2000 },
     { name: "Novembro", Total: 2700 },
@@ -20,12 +27,13 @@ const data = [
 
 const Chart = ({ aspect, title }) => {
     return (
-        <div className={styles.chart}>
-            <div className={styles.title}>{title}</div>
-            <ResponsiveContainer width="100%" aspect={aspect}>
-                <BarChart
-                    data={data}
-                >
+        <div className={`shadow-md p-3 text-primary w-full`}>
+            <div className={`font-bold mb-3`}>{title}</div>
+            <ResponsiveContainer
+                width={'100%'}
+                aspect={aspect}
+            >
+                <BarChart data={data}>
                     <CartesianGrid strokeDasharray="1 2" />
                     <XAxis dataKey="name" />
                     <YAxis />
@@ -36,6 +44,6 @@ const Chart = ({ aspect, title }) => {
             </ResponsiveContainer>
         </div>
     );
-}
+};
 
 export default Chart;
