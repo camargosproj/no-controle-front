@@ -54,12 +54,13 @@ export default class ExpenseService {
       },
     });
 
-    const totalAmount = await this.balanceService.updateTotalAmount(
-      transactionGroupId,
-      "expense",
-      balanceMonthName as MonthType,
-      year
-    );
+    const totalAmount =
+      await this.balanceService.updateTransactionGroupTotalAmount(
+        transactionGroupId,
+        "expense",
+        balanceMonthName as MonthType,
+        year
+      );
     return { ...expenseData, totalAmount };
   }
 
@@ -94,18 +95,23 @@ export default class ExpenseService {
       },
     });
 
-    const totalAmount = await this.balanceService.getTotalAmount(
-      transactionGroupId,
-      "expense",
-      month as MonthType,
-      year
-    );
+    const totalAmount =
+      await this.balanceService.getTransactionGroupTotalAmount(
+        transactionGroupId,
+        "expense",
+        month as MonthType,
+        year
+      );
     if (totalAmount) {
       return [...data, { totalAmount }];
     }
     return {
       data: data,
-      balance: await this.balanceService.getBalance(userId, month as MonthType),
+      balance: await this.balanceService.getBalance(
+        userId,
+        month as MonthType,
+        year
+      ),
     };
   }
 
@@ -148,14 +154,14 @@ export default class ExpenseService {
     const year = moment(updatedExpense.date).format("YYYY");
 
     if (expense.transactionGroupId !== data.transactionGroupId) {
-      await this.balanceService.updateTotalAmount(
+      await this.balanceService.updateTransactionGroupTotalAmount(
         expense.transactionGroupId,
         "expense",
         balanceMonthName as MonthType,
         year
       );
     }
-    await this.balanceService.updateTotalAmount(
+    await this.balanceService.updateTransactionGroupTotalAmount(
       data.transactionGroupId,
       "expense",
       balanceMonthName as MonthType,
@@ -177,7 +183,7 @@ export default class ExpenseService {
     const balanceMonthName = moment(deletedExpense.date).format("MMMM");
     const year = moment(deletedExpense.date).format("YYYY");
 
-    await this.balanceService.updateTotalAmount(
+    await this.balanceService.updateTransactionGroupTotalAmount(
       deletedExpense.transactionGroupId,
       "expense",
       balanceMonthName as MonthType,

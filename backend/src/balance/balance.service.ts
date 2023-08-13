@@ -10,7 +10,7 @@ export default class BalanceService {
   constructor(prisma: PrismaService) {
     this.prisma = prisma;
   }
-  async updateTotalAmount(
+  async updateTransactionGroupTotalAmount(
     transactionGroupId: string,
     type: BalanceModel,
     month: MonthType,
@@ -103,6 +103,16 @@ export default class BalanceService {
 
     const totalBalance = totalIncome._sum.amount - totalExpense._sum.amount;
 
+    if (!totalIncome._sum.amount && !totalExpense._sum.amount) {
+      return {
+        totalExpense: 0,
+        totalIncome: 0,
+        totalBalance: 0,
+        month,
+        year,
+      };
+    }
+
     return await this.createOrUpdateBalance(userId, month, year, {
       totalExpense: totalExpense._sum.amount,
       totalIncome: totalIncome._sum.amount,
@@ -166,7 +176,7 @@ export default class BalanceService {
     };
   }
 
-  async getTotalAmount(
+  async getTransactionGroupTotalAmount(
     transactionGroupId: string,
     type: BalanceModel,
     month: MonthType,
@@ -176,7 +186,12 @@ export default class BalanceService {
     if (!transactionGroupId) {
       return;
     }
-    await this.updateTotalAmount(transactionGroupId, type, month, year);
+    await this.updateTransactionGroupTotalAmount(
+      transactionGroupId,
+      type,
+      month,
+      year
+    );
 
     const group = await this.prisma.transactionGroup.findFirst({
       where: {

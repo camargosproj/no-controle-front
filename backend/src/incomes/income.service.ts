@@ -54,12 +54,13 @@ export default class IncomeService {
       },
     });
 
-    const totalAmount = await this.balanceService.updateTotalAmount(
-      transactionGroupId,
-      "income",
-      balanceMonthName as MonthType,
-      year
-    );
+    const totalAmount =
+      await this.balanceService.updateTransactionGroupTotalAmount(
+        transactionGroupId,
+        "income",
+        balanceMonthName as MonthType,
+        year
+      );
     return { ...incomeData, totalAmount };
   }
 
@@ -94,12 +95,13 @@ export default class IncomeService {
       },
     });
 
-    const totalAmount = await this.balanceService.getTotalAmount(
-      transactionGroupId,
-      "income",
-      month as MonthType,
-      year
-    );
+    const totalAmount =
+      await this.balanceService.getTransactionGroupTotalAmount(
+        transactionGroupId,
+        "income",
+        month as MonthType,
+        year
+      );
     if (totalAmount) {
       return [...data, { totalAmount }];
     }
@@ -155,14 +157,14 @@ export default class IncomeService {
       data.transactionGroupId &&
       income.transactionGroupId !== data.transactionGroupId
     ) {
-      await this.balanceService.updateTotalAmount(
+      await this.balanceService.updateTransactionGroupTotalAmount(
         income.transactionGroupId,
         "income",
         balanceMonthName as MonthType,
         year
       );
     } else {
-      await this.balanceService.updateTotalAmount(
+      await this.balanceService.updateTransactionGroupTotalAmount(
         updatedIncome.transactionGroupId,
         "income",
         balanceMonthName as MonthType,
@@ -184,7 +186,7 @@ export default class IncomeService {
     const balanceMonthName = moment(deletedIncome.date).format("MMMM");
     const year = moment(deletedIncome.date).format("YYYY");
 
-    await this.balanceService.updateTotalAmount(
+    await this.balanceService.updateTransactionGroupTotalAmount(
       deletedIncome.transactionGroupId,
       "income",
       balanceMonthName as MonthType,
