@@ -1,19 +1,14 @@
 import TableHead from "../../components/shared/table/TableHead";
 import TableItem from "../../components/shared/table/TableItem";
-import AddWidget from "../../components/widget/AddWidget";
-import Widget from "../../components/widget/Widget";
+import SidePanel from "../../components/widget/SidePanel";
 import api from "../../services/api-client/api";
 import { Income, IncomeResponse } from "./types.incomes";
 
 const Income = ({ incomes, balance }: IncomeResponse) => {
     return (
         <div className="flex p-4 gap-2">
-            <div className="w-1/4 sm:w-[10%] gap-4 flex flex-col">
-                <AddWidget type='income' />
-                <Widget type="despesas" data={{ description: 'Despesas', amount: balance.totalExpense }} />
-                <Widget type="rendimentos" data={{ description: 'Rendimentos', amount: balance.totalIncome }} />
-                <Widget type="saldo" data={{ description: 'Saldo', amount: balance.totalBalance }} />
-            </div>
+            <SidePanel {...balance} />
+
             <div className={'flex flex-1 flex-col gap-3'}>
                 <TableHead />
                 {incomes && incomes.map((income, index) => (
@@ -39,7 +34,10 @@ export async function getServerSideProps(ctx: any) {
         }
         // Fetch data from external API
         const apiClient = api(ctx);
-        const { data, status } = await apiClient.get('/income')
+        const query = ctx.query;
+        const { data, status } = await apiClient.get('/income', {
+            params: query
+        })
 
 
         if (status !== 200) {

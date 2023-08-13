@@ -4,7 +4,7 @@ import { Box } from "@mui/system";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
 // Styles
@@ -70,7 +70,7 @@ const AddWidget = ({ type }: AddWidgetProps) => {
         try {
             const { data: categories } = await apiClient.get('/category', {
                 params: {
-                    type: categoryType[type]
+                    type: categoryType[type.replace('/', '')]
                 }
             });
             setCategories(categories);
@@ -87,9 +87,14 @@ const AddWidget = ({ type }: AddWidgetProps) => {
         setDate(null);
     };
 
+    const initialized = useRef(false)
     useEffect(() => {
-        getCategories();
-    }, [])
+        if (!initialized.current) {
+            initialized.current = true;
+            getCategories();
+            return;
+        }
+    }, [type])
     return (
         <div className="bg-slate-50 rounded-md shadow-md cursor-pointer h-16 w-full flex justify-center content-center flex-wrap">
             <AddIcon className="text-7xl text-primary" onClick={handleOpen} />
