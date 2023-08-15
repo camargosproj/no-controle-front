@@ -4,10 +4,6 @@ import Widget from "../../components/widget/Widget";
 import { SummaryResponse } from "./home.type";
 
 
-
-
-
-
 const HomePage = ({ balance }: SummaryResponse) => {
     return (
         <div className={`flex pr-3 pl-3`}>
