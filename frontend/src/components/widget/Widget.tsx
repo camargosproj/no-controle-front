@@ -61,7 +61,7 @@ const Widget = ({ type, data }: WidgetData) => {
 
     return (
         <div
-            className={`flex shadow-md  rounded-md justify-between p-4 w-full ${type === pathname.replace("/", "") ? "bg-secondary" : "cursor-pointer"
+            className={`flex shadow-md hover:bg-secondary  rounded-md justify-between p-4 w-full ${type === pathname.replace("/", "") ? "bg-secondary" : "cursor-pointer"
                 }`}
             onClick={() => push(data.link)}
         >

@@ -19,7 +19,7 @@ const Layout = ({ children }: LayoutProps) => {
     return (
         <>
             <AuthContext.Provider value={auth}>
-                <div className={``}>
+                <div className={`h-screen`}>
                     <>
                         {!excludePaths.includes(pathname) ? <NavBar /> : null}
                         {children}
