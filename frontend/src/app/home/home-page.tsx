@@ -9,9 +9,9 @@ const HomePage = ({ balance }: SummaryResponse) => {
         <div className={`flex pr-3 pl-3`}>
             <div className={`flex flex-col w-full`}>
                 <div className={`flex gap-6 p-2 w-full`}>
-                    <Widget type="rendimentos" data={{ description: 'Rendimentos', amount: balance.totalIncome }} />
-                    <Widget type="despesas" data={{ description: 'Despesas', amount: balance.totalExpense }} />
-                    <Widget type="saldo" data={{ description: 'Saldo', amount: balance.totalBalance }} />
+                    <Widget type="income" data={{ description: 'Rendimentos', amount: balance.totalIncome }} />
+                    <Widget type="expense" data={{ description: 'Despesas', amount: balance.totalExpense }} />
+                    <Widget type="balance" data={{ description: 'Saldo', amount: balance.totalBalance }} />
                 </div>
 
                 <div className={`flex`}>

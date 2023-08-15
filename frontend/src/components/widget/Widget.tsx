@@ -1,57 +1,78 @@
-import { AccountBalanceWalletOutlined, KeyboardArrowDown, MonetizationOnOutlined } from "@mui/icons-material";
+import {
+    AccountBalanceWalletOutlined,
+    KeyboardArrowDown,
+    MonetizationOnOutlined,
+} from "@mui/icons-material";
+import { usePathname, useRouter } from "next/navigation";
 
 import Link from "next/link";
 
 type WidgetData = {
-    type: string,
+    type: 'income' | 'expense' | 'balance';
     data: {
-        description: string,
-        amount: number,
-        link?: string,
-        icon?: JSX.Element
-    }
-}
-
+        description: string;
+        amount: number;
+        link?: string;
+        icon?: JSX.Element;
+    };
+};
 
 const Widget = ({ type, data }: WidgetData) => {
+    const pathname = usePathname();
+    const { push } = useRouter();
     switch (type) {
-        case "rendimentos":
+        case "income":
             data = {
                 ...data,
                 link: "/income",
-                icon: (<MonetizationOnOutlined
-                    className={`text-primary text-4xl self-end`}
-                />),
+                icon: (
+                    <MonetizationOnOutlined
+                        className={`text-primary text-4xl self-end`}
+                    />
+                ),
             };
             break;
-        case "despesas":
+        case "expense":
             data = {
                 ...data,
                 link: "/expense",
-                icon: (<MonetizationOnOutlined
-                    className={` text-primary text-4xl self-end`}
-                />),
+                icon: (
+                    <MonetizationOnOutlined
+                        className={` text-primary text-4xl self-end`}
+                    />
+                ),
             };
             break;
-        case "saldo":
+        case "balance":
             data = {
                 ...data,
-                link: "/saldo",
-                icon: (<AccountBalanceWalletOutlined
-                    className={`text-primary text-4xl self-end `}
-                />),
+                link: "/balance",
+                icon: (
+                    <AccountBalanceWalletOutlined
+                        className={`text-primary text-4xl self-end `}
+                    />
+                ),
             };
             break;
         default:
             break;
     }
 
-    return (
 
-        <div className={`flex shadow-md rounded-md justify-between p-4 w-full`}>
+    return (
+        <div
+            className={`flex shadow-md  rounded-md justify-between p-4 w-full ${type === pathname.replace("/", "") ? "bg-secondary" : "cursor-pointer"
+                }`}
+            onClick={() => push(data.link)}
+        >
             <div className={`flex justify-between flex-col`}>
-                <span >{data.description}</span>
-                <span >{Number(data.amount).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</span>
+                <span>{data.description}</span>
+                <span>
+                    {Number(data.amount).toLocaleString("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                    })}
+                </span>
                 <Link href={data.link as string}>
                     <span>Ver mais</span>
                 </Link>
@@ -65,7 +86,6 @@ const Widget = ({ type, data }: WidgetData) => {
             </div>
         </div>
     );
-}
+};
 
 export default Widget;
-
