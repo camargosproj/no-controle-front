@@ -1,4 +1,5 @@
-import { useRouter } from "next/router"
+"use client"
+import { usePathname } from "next/navigation"
 import Filter from "../filter/Filter"
 import AddWidget from "./AddWidget"
 import Widget from "./Widget"
@@ -11,7 +12,7 @@ type SidePanelProps = {
 }
 
 const SidePanel = ({ totalBalance, totalExpense, totalIncome }: SidePanelProps) => {
-    const { pathname } = useRouter();
+    const pathname = usePathname();
     return (
         <div className="w-1/3 sm:min-w-[10%] sm:max-w-[13%] gap-4 flex flex-col">
             <AddWidget type={pathname.replace('/', '') as "income" | "expense"} />

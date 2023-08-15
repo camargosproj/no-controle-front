@@ -1,5 +1,8 @@
+'use client'
 import Chart from "../../components/chart/Chart";
 import Widget from "../../components/widget/Widget";
+import { SummaryResponse } from "./home.type";
+
 
 
 

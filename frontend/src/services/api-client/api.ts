@@ -7,14 +7,8 @@ const COOKIE_KEY = process.env.NEXT_PUBLIC_AUTH_COOKIE_KEY || "auth_cookie";
 const isServer = typeof window === "undefined";
 
 const baseURL = API_URL;
-function apiClientInstance(ctx = null) {
-  let cookies = null;
-  if (ctx) {
-    const cookieData = getCookie(COOKIE_KEY, ctx);
-    if (cookieData) {
-      cookies = JSON.parse(cookieData as string);
-    }
-  } else {
+function apiClientInstance(cookies?: any) {
+  if (!cookies) {
     const cookieData = getCookie(COOKIE_KEY);
     if (cookieData) {
       cookies = JSON.parse(cookieData as string);

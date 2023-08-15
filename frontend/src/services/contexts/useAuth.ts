@@ -1,15 +1,16 @@
+"use client";
 import { deleteCookie, getCookie, setCookie } from "cookies-next";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import api from "../api-client/api";
-import { AuthContextType, AuthLogin, SinginResponse } from "./auth.type";
+import { AuthLogin, SinginResponse } from "./auth.type";
 
 const COOKIE_KEY = process.env.NEXT_PUBLIC_AUTH_COOKIE_KEY || "auth_cookie";
 
 const apiClient = api();
 
-export const AuthContext = createContext<AuthContextType>({
+export const AuthContext = createContext({
   user: null,
   login: (props: AuthLogin) => new Promise(() => {}),
   logout: () => new Promise(() => {}),
@@ -43,7 +44,7 @@ export function useAuthProvider() {
       setLoginCookie(response.data);
       router.push("/");
     } catch (error) {
-      toast(error?.response.data.message || "Algo deu errado", {
+      toast(error?.response?.data?.message || "Algo deu errado", {
         type: "error",
         autoClose: 3000,
         closeButton: true,
@@ -107,7 +108,7 @@ export function useAuthProvider() {
     login,
     logout,
     getCookieData,
-    sendPasswordResetEmail,
-    setLoginCookie,
+    // sendPasswordResetEmail,
+    // setLoginCookie,
   };
 }

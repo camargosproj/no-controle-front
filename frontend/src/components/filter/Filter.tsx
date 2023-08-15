@@ -1,10 +1,12 @@
+'use client'
 import { TextField } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/pt-br";
-import { useRouter } from "next/router";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { createQueryString } from "../../services/util";
 
 type RequestQuery = {
     month: string,
@@ -27,16 +29,17 @@ const MonthMap = {
 
 }
 
+
+
 const Filter = () => {
     const [date, setDate] = useState<Dayjs | null>(dayjs());
     const [queryData, setQueryData] = useState<RequestQuery | null>(null);
     const router = useRouter();
+    const pathname = usePathname();
     useEffect(() => {
         if (queryData) {
-            router.push({
-                pathname: router.pathname,
-                query: queryData
-            });
+            const query = createQueryString(queryData);
+            router.push(`${pathname}?${query}`);
         }
     }, [queryData])
 

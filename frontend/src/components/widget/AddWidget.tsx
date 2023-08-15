@@ -1,3 +1,4 @@
+'use client';
 import AddIcon from "@mui/icons-material/Add";
 import { Button, FormControl, Input, InputAdornment, InputLabel, MenuItem, Modal, Select, TextField } from "@mui/material";
 import { Box } from "@mui/system";
@@ -8,7 +9,7 @@ import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
 // Styles
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { apiClient } from "../../services/api-client/apiClient";
 
 const style = {

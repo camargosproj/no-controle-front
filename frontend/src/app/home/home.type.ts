@@ -1,4 +1,4 @@
-type SummaryResponse = {
+export type SummaryResponse = {
   name: string;
   email: string;
   createdAt: string;

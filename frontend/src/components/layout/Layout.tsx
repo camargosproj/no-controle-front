@@ -1,28 +1,32 @@
+"use client";
+import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { AuthContext, useAuthProvider } from "../../services/contexts/useAuth";
 import NavBar from "../navbar/NavBar";
-
-
-import { useRouter } from "next/router";
 
 type LayoutProps = {
     children: ReactNode;
-}
+};
 
-const excludePaths = ['/login', '/register'];
+const excludePaths = ["/login", "/register"];
 
 const Layout = ({ children }: LayoutProps) => {
-    const router = useRouter();
+    const pathname = usePathname();
+    const auth = useAuthProvider();
 
     return (
         <>
-            <div className={``}>
-                <>
-                    {router.pathname !== '/login' ? < NavBar /> : null}
-                    {children}
-
-                </>
-            </div>
-
+            <AuthContext.Provider value={auth}>
+                <div className={``}>
+                    <>
+                        {!excludePaths.includes(pathname) ? <NavBar /> : null}
+                        {children}
+                    </>
+                </div>
+                <ToastContainer />
+            </AuthContext.Provider>
         </>
     );
 };
