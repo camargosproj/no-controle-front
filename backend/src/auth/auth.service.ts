@@ -34,6 +34,19 @@ export default class AuthService {
         email: true,
         createdAt: true,
         updatedAt: true,
+        Balance: {
+          where: {
+            year: moment().format("YYYY"),
+          },
+          select: {
+            id: true,
+            month: true,
+            year: true,
+            balance: true,
+            expenseTotal: true,
+            incomeTotal: true,
+          },
+        },
       },
     });
     if (!user) {
@@ -41,10 +54,16 @@ export default class AuthService {
     }
 
     const balance = await this.balanceService.getBalance(id);
-    return {
+
+    const data = {
       ...user,
-      balance,
+      year: user.Balance,
+      month: balance,
     };
+
+    delete data.Balance;
+
+    return data;
   }
 
   async singIn(email: string, password: string) {
