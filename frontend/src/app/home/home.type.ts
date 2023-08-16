@@ -3,9 +3,19 @@ export type SummaryResponse = {
   email: string;
   createdAt: string;
   updatedAt: string;
-  balance: {
+  month: {
     totalExpense: number;
     totalIncome: number;
     totalBalance: number;
   };
+  year: SummaryResponseByYear[];
+};
+
+export type SummaryResponseByYear = {
+  id: string;
+  month: string;
+  year: string;
+  balance: number;
+  expenseTotal: number;
+  incomeTotal: number;
 };
