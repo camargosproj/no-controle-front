@@ -3,9 +3,10 @@ import {
     KeyboardArrowDown,
     MonetizationOnOutlined,
 } from "@mui/icons-material";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import Link from "next/link";
+import { createQueryString } from "../../services/util";
 
 type WidgetData = {
     type: 'income' | 'expense' | 'balance';
@@ -19,12 +20,30 @@ type WidgetData = {
 
 const Widget = ({ type, data }: WidgetData) => {
     const pathname = usePathname();
+    const query = useSearchParams();
+
+    let querySearch;
+
+    const month = query.get('month');
+    const year = query.get('year');
+
+    if (month && year) {
+        querySearch = {
+            month,
+            year
+        }
+    }
+
+    const url = createQueryString(querySearch);
+
+
+
     const { push } = useRouter();
     switch (type) {
         case "income":
             data = {
                 ...data,
-                link: "/income",
+                link: `/income?${url}`,
                 icon: (
                     <MonetizationOnOutlined
                         className={`text-primary text-4xl self-end`}
@@ -35,7 +54,7 @@ const Widget = ({ type, data }: WidgetData) => {
         case "expense":
             data = {
                 ...data,
-                link: "/expense",
+                link: `/expense?${url}`,
                 icon: (
                     <MonetizationOnOutlined
                         className={` text-primary text-4xl self-end`}

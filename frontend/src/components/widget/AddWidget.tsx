@@ -9,7 +9,8 @@ import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
 // Styles
-import { useRouter } from "next/navigation";
+import dayjs, { Dayjs } from "dayjs";
+import { useRouter, useSearchParams } from "next/navigation";
 import { apiClient } from "../../services/api-client/apiClient";
 
 const style = {
@@ -42,18 +43,23 @@ type FormValues = {
 
 const AddWidget = ({ type }: AddWidgetProps) => {
     const [categories, setCategories] = useState<any>([]);
+    const [open, setOpen] = useState(false);
+    const query = useSearchParams();
     const router = useRouter();
+    const month = query.get('month');
+    const year = query.get('year');
+    const [date, setDate] = useState<Dayjs | null>(dayjs());
 
     const { register, handleSubmit, reset, setValue } = useForm();
     const onSubmit = async (data: FormValues) => {
-
         try {
             await apiClient.post(`/${type}`, {
                 ...data,
+                date,
                 amount: parseFloat(data.amount),
             })
             handleClose();
-            router.push(`/${type}`);
+            router.refresh();
 
         } catch (error) {
             console.log(error);
@@ -63,9 +69,8 @@ const AddWidget = ({ type }: AddWidgetProps) => {
 
     };
 
-    const [open, setOpen] = useState(false);
 
-    const [date, setDate] = useState(null);
+
 
     const getCategories = async () => {
         try {
@@ -85,8 +90,23 @@ const AddWidget = ({ type }: AddWidgetProps) => {
     const handleClose = () => {
         setOpen(false)
         reset();
-        setDate(null);
+        handleChangeDate()
     };
+
+    const handleChangeDate = () => {
+        if (month && year) {
+            setDate(dayjs(`${month}-${year}`));
+        } else {
+            setDate(dayjs());
+        }
+    }
+
+    useEffect(() => {
+
+        handleChangeDate();
+
+
+    }, [month, year])
 
     const initialized = useRef(false)
     useEffect(() => {
@@ -130,7 +150,7 @@ const AddWidget = ({ type }: AddWidgetProps) => {
                             />
                         </FormControl>
                         <FormControl fullWidth sx={{ m: 1 }} variant="standard">
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <LocalizationProvider adapterLocale={"pt-br"} dateAdapter={AdapterDayjs}>
                                 <DatePicker
                                     label="Data"
                                     value={date}
@@ -138,10 +158,10 @@ const AddWidget = ({ type }: AddWidgetProps) => {
                                         required: true,
 
                                     })}
-                                    onChange={(newValue) => {
-                                        const date = newValue?.format('YYYY-MM-DD');
-                                        setDate(date);
-                                        setValue('date', date);
+
+                                    onChange={(newValue: Dayjs) => {
+                                        setDate(newValue);
+                                        setValue('date', newValue);
                                     }}
                                     renderInput={(params) => <TextField {...params} />}
                                 />

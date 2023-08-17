@@ -4,7 +4,7 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/pt-br";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { createQueryString } from "../../services/util";
 
@@ -13,7 +13,7 @@ type RequestQuery = {
     year: string
 }
 
-const MonthMap = {
+export const MonthMap = {
     'janeiro': 'january',
     'fevereiro': 'february',
     'março': 'march',
@@ -32,10 +32,16 @@ const MonthMap = {
 
 
 const Filter = () => {
-    const [date, setDate] = useState<Dayjs | null>(dayjs());
+    const query = useSearchParams();
+    const month = query.get('month');
+    const year = query.get('year');
+    const [date, setDate] = useState<Dayjs | null>(() => month && year ? dayjs(`${month}-${year}`) : dayjs());
     const [queryData, setQueryData] = useState<RequestQuery | null>(null);
+
     const router = useRouter();
     const pathname = usePathname();
+
+
     useEffect(() => {
         if (queryData) {
             const query = createQueryString(queryData);

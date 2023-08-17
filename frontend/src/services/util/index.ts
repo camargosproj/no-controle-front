@@ -8,3 +8,23 @@ export const createQueryString = (data: any) => {
 
   return params.toString();
 };
+
+export const createQueryUrl = (query) => {
+  let querySearch;
+
+  const month = query.get("month");
+  const year = query.get("year");
+
+  if (month && year) {
+    querySearch = {
+      month,
+      year,
+    };
+  } else {
+    return "";
+  }
+
+  const url = createQueryString(querySearch);
+
+  return `?${url}`;
+};
