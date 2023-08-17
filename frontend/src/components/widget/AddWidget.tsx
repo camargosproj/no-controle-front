@@ -1,5 +1,5 @@
 'use client';
-import AddIcon from "@mui/icons-material/Add";
+import { Add } from "@mui/icons-material";
 import { Button, FormControl, Input, InputAdornment, InputLabel, MenuItem, Modal, Select, TextField } from "@mui/material";
 import { Box } from "@mui/system";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -118,7 +118,7 @@ const AddWidget = ({ type }: AddWidgetProps) => {
     }, [type])
     return (
         <div className="bg-slate-50 rounded-md shadow-md cursor-pointer h-16 w-full flex justify-center content-center flex-wrap">
-            <AddIcon className="text-7xl text-primary" onClick={handleOpen} />
+            <Add className="text-7xl text-primary" onClick={handleOpen} />
             <Modal
                 open={open}
                 onClose={handleClose}
