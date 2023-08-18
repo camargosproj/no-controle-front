@@ -1,5 +1,4 @@
 'use client'
-import SimpleCharts from "../../components/chart/BarChart";
 import Widget from "../../components/widget/Widget";
 import { SummaryResponse } from "./home.type";
 
@@ -18,7 +17,7 @@ const HomePage = ({ month, year }: SummaryResponse) => {
                     {/* <Featured /> */}
                     {/* <Chart title="Receita Anual" aspect={2 / 1} />
                     <Chart title="Despesas Anual" aspect={2 / 1} /> */}
-                    <SimpleCharts year={year} />
+                    {/* <SimpleCharts year={year} /> */}
                     {/* <SimpleCharts year={year} /> */}
                 </div>
             </div>
