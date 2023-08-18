@@ -1,4 +1,4 @@
-FROM node:18
+FROM node:18 AS development
 
 # Set working directory
 WORKDIR /app
@@ -18,3 +18,25 @@ EXPOSE 4000
 
 # Start development server
 CMD ["yarn", "dev"]
+
+FROM node:18 AS production
+
+# Set working directory
+WORKDIR /app
+
+# Install dependencies
+COPY package.json *.lock ./
+RUN yarn
+
+# Copy app files
+COPY . .
+
+# Expose port for development
+EXPOSE 4000
+
+# Build app
+RUN npx prisma generate && npx tsc
+
+# Start production server
+CMD ["yarn", "start"]
+

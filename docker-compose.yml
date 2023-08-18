@@ -5,6 +5,7 @@ services:
       build: 
         context: ./backend
         dockerfile: Dockerfile  
+        target: ${NODE_ENV}
       image: backend-nocontrole 
       container_name: backend-nocontrole   
       environment:
@@ -24,11 +25,13 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      target: ${NODE_ENV}
     image: next-app
     container_name: next-app
     volumes:
       - ./frontend:/app
       - ./app/node_modules
+      - /app/.next
     ports:
       - "3000:3000"
     networks:
@@ -52,6 +55,7 @@ services:
   studio:
     build:
         context: ./backend
+        target: ${NODE_ENV}
     container_name: prisma_studio
     command: bash -c "npx prisma generate && npx prisma studio"
     volumes:
@@ -65,6 +69,7 @@ services:
   migration:
     build:
         context: ./backend
+        target: ${NODE_ENV}
     container_name: prisma_migration
     command: bash -c "npx prisma migrate dev && yarn seed && npx prisma generate"
     volumes:

@@ -16,6 +16,7 @@
     "seed": "ts-node prisma/seed.ts"
   },
   "scripts": {
+    "start": "node dist/src/server.js",
     "dev": "npx prisma generate && nodemon",
     "migrate": "docker-compose up migration && npx prisma generate",
     "seed": "ts-node prisma/seed.ts",
