@@ -3,7 +3,7 @@ import apiClientInstance from "../services/api-client/api";
 import { COOKIE_KEY } from "../services/config";
 
 import { redirect } from "next/navigation";
-import HomePage from "./home/page";
+import HomePage from "./home/home-page";
 
 
 
