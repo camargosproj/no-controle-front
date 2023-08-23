@@ -54,12 +54,14 @@ const Filter = () => {
         >
             <LocalizationProvider adapterLocale={"pt-br"} dateAdapter={AdapterDayjs}>
                 <DatePicker
+
                     label="Data"
                     value={date}
                     views={["month", "year"]}
                     onChange={(newValue: Dayjs) => {
+
                         setQueryData({
-                            month: MonthMap[newValue.format('MMMM').toLocaleLowerCase()],
+                            month: newValue.format('MMMM').toLocaleLowerCase(),
                             year: newValue.format('YYYY')
                         });
 
