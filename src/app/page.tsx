@@ -10,22 +10,17 @@ import HomePage from "./home/home-page";
 
 async function getBalance() {
 
-    try {
-        const getCookie = cookies()
+    const getCookie = cookies()
 
-        const cookie = getCookie.get(COOKIE_KEY)?.value
-        if (!cookie) {
-            redirect('/login')
-        }
-        const cookieData = JSON.parse(cookie)
-        const apiClient = apiClientInstance(cookieData);
-        const { data } = await apiClient.get('/auth/user/summary');
-        return data;
-    } catch (error) {
-        console.log(error);
+    const cookie = getCookie.get(COOKIE_KEY)?.value
+    if (!cookie) {
         redirect('/login')
-
     }
+    const cookieData = JSON.parse(cookie)
+    const apiClient = apiClientInstance(cookieData);
+    const { data } = await apiClient.get('/auth/user/summary');
+    return data;
+
 
 }
 

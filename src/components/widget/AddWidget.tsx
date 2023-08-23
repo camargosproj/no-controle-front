@@ -6,11 +6,11 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { GrAdd } from "react-icons/gr";
 
 // Styles
 import dayjs, { Dayjs } from "dayjs";
 import { useRouter, useSearchParams } from "next/navigation";
+import { IoMdAddCircleOutline } from "react-icons/io";
 import { apiClient } from "../../services/api-client/apiClient";
 
 const style = {
@@ -41,6 +41,9 @@ type FormValues = {
     category: string;
 }
 
+
+
+
 const AddWidget = ({ type }: AddWidgetProps) => {
     const [categories, setCategories] = useState<any>([]);
     const [open, setOpen] = useState(false);
@@ -50,8 +53,10 @@ const AddWidget = ({ type }: AddWidgetProps) => {
     const year = query.get('year');
     const [date, setDate] = useState<Dayjs | null>(dayjs());
 
-    const { register, handleSubmit, reset, setValue } = useForm();
+    const { register, handleSubmit, reset, setValue, formState } = useForm();
     const onSubmit = async (data: FormValues) => {
+
+
         try {
             await apiClient.post(`/${type}`, {
                 ...data,
@@ -59,6 +64,8 @@ const AddWidget = ({ type }: AddWidgetProps) => {
                 amount: parseFloat(data.amount),
             })
             handleClose();
+
+
 
             router.refresh();
 
@@ -118,8 +125,8 @@ const AddWidget = ({ type }: AddWidgetProps) => {
         }
     }, [type])
     return (
-        <div className="bg-slate-50 rounded-md shadow-md cursor-pointer h-16 w-full flex justify-center content-center flex-wrap">
-            <GrAdd className="text-4xl text-primary" onClick={handleOpen} />
+        <div className="bg-slate-50 rounded-md shadow-md cursor-pointer text-primary h-16 w-full flex justify-center content-center flex-wrap">
+            <IoMdAddCircleOutline className="p-2 text-4xl w-full h-full text-primary" onClick={handleOpen} />
             <Modal
                 open={open}
                 onClose={handleClose}
@@ -190,7 +197,8 @@ const AddWidget = ({ type }: AddWidgetProps) => {
                         </FormControl>
 
                         <Box display={"flex"} justifyContent={"flex-end"}>
-                            <Button type="submit" >Adicionar</Button>
+                            <Button type="submit" className="bg-primary " variant="contained" disabled={formState.isSubmitting} >Adicionar</Button>
+
                         </Box>
                     </form>
                 </Box>
