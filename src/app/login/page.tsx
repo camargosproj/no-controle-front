@@ -1,6 +1,6 @@
 "use client";
-import { PaidSharp } from "@mui/icons-material";
 import { useForm } from "react-hook-form";
+import { MdPaid } from "react-icons/md";
 import { useAuth } from "../../services/contexts/useAuth";
 
 const Login = () => {
@@ -16,7 +16,7 @@ const Login = () => {
         <div className="flex flex-col w-full h-screen items-center justify-center gap-5 ">
             <div className={`flex items-center top-32 absolute`}>
                 <h1 className={`text-3xl text-primary`}>NO CONTROLE</h1>
-                <PaidSharp className={`text-primary text-6xl md:text-7xl`} />
+                <MdPaid className={`text-primary text-6xl md:text-7xl`} />
             </div>
             <h1 className={`text-4xl text-primary`}>Login</h1>
             <form

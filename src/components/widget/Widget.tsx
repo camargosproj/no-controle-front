@@ -1,11 +1,9 @@
-import {
-    AccountBalanceWalletOutlined,
-    KeyboardArrowDown,
-    MonetizationOnOutlined,
-} from "@mui/icons-material";
+
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import Link from "next/link";
+import { BiWalletAlt } from "react-icons/bi";
+import { MdPaid } from "react-icons/md";
 import { createQueryString } from "../../services/util";
 
 type WidgetData = {
@@ -45,9 +43,7 @@ const Widget = ({ type, data }: WidgetData) => {
                 ...data,
                 link: `/income?${url}`,
                 icon: (
-                    <MonetizationOnOutlined
-                        className={`text-primary text-4xl self-end`}
-                    />
+                    <MdPaid className={`text-primary text-6xl md:text-3xl`} />
                 ),
             };
             break;
@@ -56,9 +52,7 @@ const Widget = ({ type, data }: WidgetData) => {
                 ...data,
                 link: `/expense?${url}`,
                 icon: (
-                    <MonetizationOnOutlined
-                        className={` text-primary text-4xl self-end`}
-                    />
+                    <MdPaid className={`text-primary text-6xl md:text-3xl`} />
                 ),
             };
             break;
@@ -67,9 +61,8 @@ const Widget = ({ type, data }: WidgetData) => {
                 ...data,
                 link: "/balance",
                 icon: (
-                    <AccountBalanceWalletOutlined
-                        className={`text-primary text-4xl self-end `}
-                    />
+                    <BiWalletAlt className={`text-primary text-6xl md:text-3xl`} />
+
                 ),
             };
             break;
@@ -98,7 +91,7 @@ const Widget = ({ type, data }: WidgetData) => {
             </div>
             <div className={`flex flex-col gap-2`}>
                 <div className={`text-green-500`}>
-                    <KeyboardArrowDown />
+                    {/* <KeyboardArrowDown /> */}
                     20%
                 </div>
                 {data.icon}

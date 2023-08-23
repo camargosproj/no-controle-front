@@ -1,5 +1,4 @@
 'use client'
-import { TextField } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
@@ -66,9 +65,7 @@ const Filter = () => {
 
                         setDate(newValue);
                     }}
-                    renderInput={(params) => (
-                        <TextField {...params} />
-                    )}
+
                 />
             </LocalizationProvider>
         </div>

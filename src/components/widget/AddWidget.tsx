@@ -1,12 +1,12 @@
 'use client';
-import { Add } from "@mui/icons-material";
-import { Button, FormControl, Input, InputAdornment, InputLabel, MenuItem, Modal, Select, TextField } from "@mui/material";
+import { Button, FormControl, Input, InputAdornment, InputLabel, MenuItem, Modal, Select } from "@mui/material";
 import { Box } from "@mui/system";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import { GrAdd } from "react-icons/gr";
 
 // Styles
 import dayjs, { Dayjs } from "dayjs";
@@ -118,7 +118,7 @@ const AddWidget = ({ type }: AddWidgetProps) => {
     }, [type])
     return (
         <div className="bg-slate-50 rounded-md shadow-md cursor-pointer h-16 w-full flex justify-center content-center flex-wrap">
-            <Add className="text-7xl text-primary" onClick={handleOpen} />
+            <GrAdd className="text-4xl text-primary" onClick={handleOpen} />
             <Modal
                 open={open}
                 onClose={handleClose}
@@ -163,7 +163,6 @@ const AddWidget = ({ type }: AddWidgetProps) => {
                                         setDate(newValue);
                                         setValue('date', newValue);
                                     }}
-                                    renderInput={(params) => <TextField {...params} />}
                                 />
                             </LocalizationProvider>
                         </FormControl>
