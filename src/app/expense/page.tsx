@@ -10,34 +10,42 @@ import { Expense } from "./types.expenses";
 
 async function getExpenses(query) {
 
-    const getCookie = cookies()
+    try {
+        const getCookie = cookies()
 
-    const cookie = getCookie.get(COOKIE_KEY)?.value
-    if (!cookie) {
-        redirect('/login')
-    }
-    const cookieData = JSON.parse(cookie)
-    const apiClient = apiClientInstance(cookieData);
-    const { data } = await apiClient.get('/expense', {
-        params: query
-    });
+        const cookie = getCookie.get(COOKIE_KEY)?.value
+        if (!cookie) {
+            redirect('/login')
+        }
+        const cookieData = JSON.parse(cookie)
+        const apiClient = apiClientInstance(cookieData);
+        const { data } = await apiClient.get('/expense', {
+            params: query
+        });
 
 
-    const expenses = data.data.map((expense: Expense) => {
+        const expenses = data.data.map((expense: Expense) => {
+            return {
+                ...expense,
+                date: new Date(expense.date).toLocaleDateString("pt-BR", {
+                    day: "2-digit",
+                    month: "long",
+                    year: "numeric",
+                }),
+                link: `/expense/${expense.id}`,
+            };
+        })
         return {
-            ...expense,
-            date: new Date(expense.date).toLocaleDateString("pt-BR", {
-                day: "2-digit",
-                month: "long",
-                year: "numeric",
-            }),
-            link: `/expense/${expense.id}`,
+            expenses,
+            balance: data.balance
         };
-    })
-    return {
-        expenses,
-        balance: data.balance
-    };
+
+    } catch (error) {
+        console.log(error);
+        redirect('/login')
+
+    }
+
 }
 
 

@@ -59,6 +59,7 @@ const AddWidget = ({ type }: AddWidgetProps) => {
                 amount: parseFloat(data.amount),
             })
             handleClose();
+
             router.refresh();
 
         } catch (error) {
@@ -172,7 +173,6 @@ const AddWidget = ({ type }: AddWidgetProps) => {
                                 labelId="demo-simple-select-standard-label"
                                 id="demo-simple-select-standard"
                                 defaultValue={""}
-                                // onChange={handleChange}
                                 label="Categoria"
                                 {...register("categoryId", {
                                     required: true,
