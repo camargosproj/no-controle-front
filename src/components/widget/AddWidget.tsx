@@ -125,7 +125,7 @@ const AddWidget = ({ type }: AddWidgetProps) => {
         }
     }, [type]);
     return (
-        <div className="bg-slate-50 rounded-md shadow-md cursor-pointer text-primary h-16 w-full flex justify-center content-center flex-wrap">
+        <div className="bg-slate-50  rounded-md shadow-md cursor-pointer text-primary h-16 w-full flex justify-center content-center flex-wrap">
             <IoMdAddCircleOutline
                 className="p-2 text-4xl w-full h-full text-primary"
                 onClick={handleOpen}

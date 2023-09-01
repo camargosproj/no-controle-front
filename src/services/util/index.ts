@@ -28,3 +28,7 @@ export const createQueryUrl = (query) => {
 
   return `?${url}`;
 };
+
+// Delay function for testing
+export const delay = (ms: number) =>
+  new Promise((resolve) => setTimeout(resolve, ms));

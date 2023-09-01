@@ -4,7 +4,7 @@ import SidePanel from "../../components/widget/SidePanel"
 
 const Loading = () => {
     return (
-        <div className="flex p-4 gap-2">
+        <div className="flex p-4 gap-2 animate-pulse">
             <SidePanel {
                 ...{
                     totalBalance: 0,

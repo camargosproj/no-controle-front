@@ -73,13 +73,13 @@ const Widget = ({ type, data }: WidgetData) => {
 
     return (
         <div
-            className={`flex shadow-md hover:bg-secondary  rounded-md justify-between p-4 w-full ${type === pathname.replace("/", "") ? "bg-secondary" : "cursor-pointer"
+            className={`flex  shadow-md hover:bg-secondary  rounded-md justify-between p-4 w-full ${type === pathname.replace("/", "") ? "bg-secondary" : "cursor-pointer"
                 }`}
             onClick={() => push(data.link)}
         >
-            <div className={`flex justify-between flex-col`}>
+            <div className={`flex justify-between flex-col text-primary`}>
                 <span>{data.description}</span>
-                <span>
+                <span className={`${data.amount.toString().startsWith('-') ? 'text-red-600' : 'text-green-500'}`}>
                     {Number(data.amount).toLocaleString("pt-BR", {
                         style: "currency",
                         currency: "BRL",

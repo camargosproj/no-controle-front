@@ -8,7 +8,10 @@ import { COOKIE_KEY } from "../../services/config";
 import { ServerSideProps } from "../../types";
 import { Expense } from "./types.expenses";
 
+
+
 async function getExpenses(query) {
+
     const getCookie = cookies();
 
     const cookie = getCookie.get(COOKIE_KEY)?.value;

@@ -14,7 +14,7 @@ type SidePanelProps = {
 const SidePanel = ({ totalBalance, totalExpense, totalIncome }: SidePanelProps) => {
     const pathname = usePathname();
     return (
-        <div className="w-1/3 sm:min-w-[10%] sm:max-w-[13%] gap-4 flex flex-col">
+        <div className="min-w-[8.25rem]  sm:min-w-[11.25rem] sm:max-w-[13%] gap-4 flex flex-col">
             <AddWidget type={pathname.replace('/', '') as "income" | "expense"} />
             <Filter />
             <Widget type="expense" data={{ description: 'Despesas', amount: totalExpense }} />
