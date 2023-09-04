@@ -3,7 +3,7 @@ export type AuthLogin = {
   password: string;
 };
 
-export type SinginResponse = {
+export type SignInResponse = {
   id: string;
   name: string;
   email: string;
@@ -12,8 +12,8 @@ export type SinginResponse = {
 };
 
 export type AuthContextType = {
-  user: SinginResponse | null;
+  user: SignInResponse | null;
   login: (props: AuthLogin) => Promise<void>;
   logout: () => Promise<void>;
-  getCookieData: () => SinginResponse | null;
+  getCookieData: () => SignInResponse | null;
 };

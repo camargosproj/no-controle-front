@@ -19,8 +19,12 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { toast } from "react-toastify";
-import { apiClient } from "../../services/api-client/apiClient";
+// import { apiClient } from "../../services/api-client/apiClient";
+import apiClientInstance from "../../services/api-client/api";
+import { parseCookie } from "../../services/util";
 import Loading from "../loading/Loading";
+
+
 
 const style = {
     position: "absolute" as "absolute",
@@ -57,10 +61,14 @@ const AddWidget = ({ type }: AddWidgetProps) => {
     const [isPending, startTransition] = useTransition();
     const [open, setOpen] = useState(false);
     const [date, setDate] = useState<Dayjs | null>(dayjs());
+    const cookies = parseCookie();
+    const apiClient = apiClientInstance(cookies);
     const query = useSearchParams();
     const router = useRouter();
     const month = query.get("month");
     const year = query.get("year");
+
+
 
     const { register, handleSubmit, reset, setValue, formState } = useForm();
     const onSubmit = async (data: FormValues) => {

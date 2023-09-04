@@ -40,7 +40,7 @@ const NavBar = () => {
                             />
                         </div>
                         <div className={styles.item} onClick={logout}>
-                            <MdOutlineExitToApp className={`text-primary sm:text-xl text-2xl`} />
+                            <MdOutlineExitToApp className={`text-primary sm:text-xl text-2xl cursor-pointer`} />
                         </div>
                     </div>
                 </div>

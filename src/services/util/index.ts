@@ -1,3 +1,6 @@
+import { getCookie } from "cookies-next";
+import { COOKIE_KEY } from "../config";
+
 export const createQueryString = (data: any) => {
   if (!data) return "";
   const params = new URLSearchParams();
@@ -32,3 +35,11 @@ export const createQueryUrl = (query) => {
 // Delay function for testing
 export const delay = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms));
+
+export const parseCookie = () => {
+  const cookieData = getCookie(COOKIE_KEY);
+  if (cookieData) {
+    return JSON.parse(cookieData as string);
+  }
+  return null;
+};

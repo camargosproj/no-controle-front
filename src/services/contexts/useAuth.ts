@@ -5,11 +5,13 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { excludePaths } from "../../components/layout/Layout";
 import api from "../api-client/api";
-import { AuthLogin, SinginResponse } from "./auth.type";
+import { apiClient } from "../api-client/apiClient";
+
+import { AuthLogin, SignInResponse } from "./auth.type";
 
 const COOKIE_KEY = process.env.NEXT_PUBLIC_AUTH_COOKIE_KEY || "auth_cookie";
 
-const apiClient = api();
+const apiClientInstance = api();
 
 export const AuthContext = createContext({
   user: null,
@@ -35,7 +37,7 @@ export function useAuthProvider() {
 
   const login = async (props: AuthLogin) => {
     try {
-      const response = await apiClient.post("/auth/singin", props);
+      const response = await apiClientInstance.post("/auth/singin", props);
 
       setUser({
         id: response.data.id,
@@ -61,11 +63,14 @@ export function useAuthProvider() {
   const logout = async () => {
     deleteLoginCookie();
     setUser(null);
+
+    apiClientInstance.defaults.headers.Authorization = null;
+    apiClient.defaults.headers.Authorization = null;
     router.push("/login");
   };
 
   // Store login token / user data in cookie
-  const setLoginCookie = (data: SinginResponse) => {
+  const setLoginCookie = (data: SignInResponse) => {
     setCookie(COOKIE_KEY, data);
   };
 
@@ -85,7 +90,7 @@ export function useAuthProvider() {
         return;
       }
 
-      const userData = JSON.parse(cookieData as string) as SinginResponse;
+      const userData = JSON.parse(cookieData as string) as SignInResponse;
       setUser({
         id: userData.id,
         name: userData.name,

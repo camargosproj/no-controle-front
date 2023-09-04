@@ -1,3 +1,6 @@
+import { parseCookie } from "../util";
 import apiClientInstance from "./api";
 
-export const apiClient = apiClientInstance();
+const cookies = parseCookie();
+
+export const apiClient = apiClientInstance(cookies);
