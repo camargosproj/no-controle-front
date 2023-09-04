@@ -92,7 +92,7 @@ const Validate = () => {
                     placeholder="Código"
                 />
                 <div className="flex w-full gap-3 justify-between">
-                    <Link href={`login`}>Fazer Login</Link>
+                    <Link href={`../login`}>Fazer Login</Link>
                     <button className="text-primary" onClick={handleResendCode}>Reenviar Código</button>
                 </div>
                 <button
