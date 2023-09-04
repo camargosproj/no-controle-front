@@ -20,7 +20,7 @@ const CreateAccount = () => {
     const handleSingUp = async (data: CreateAccountFormData) => {
         try {
             const response = await apiClient.post("/auth/singup", data);
-            router.push("/register/validate")
+            router.push(`/register/validate?email=${data.email}`)
         } catch (error) {
             toast(error?.response?.data?.message || "Algo deu errado", {
                 type: "error",

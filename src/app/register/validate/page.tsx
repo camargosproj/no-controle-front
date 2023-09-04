@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { MdPaid } from "react-icons/md";
 import { toast } from "react-toastify";
@@ -13,8 +13,14 @@ type ValidateAccountFormData = {
 
 const Validate = () => {
 
+    const query = useSearchParams();
+    const email = query.get('email');
     const router = useRouter();
-    const { register, handleSubmit, getValues } = useForm();
+    const { register, handleSubmit, getValues } = useForm<ValidateAccountFormData>({
+        defaultValues: {
+            email,
+        }
+    });
 
     const handleValidate = async (data: ValidateAccountFormData) => {
         try {
