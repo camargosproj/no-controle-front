@@ -10,6 +10,8 @@ import HomePage from "./home/home-page";
 
 async function getBalance() {
 
+
+
     const getCookie = cookies()
 
     const cookie = getCookie.get(COOKIE_KEY)?.value

@@ -1,8 +1,9 @@
 "use client";
 import { deleteCookie, getCookie, setCookie } from "cookies-next";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { excludePaths } from "../../components/layout/Layout";
 import api from "../api-client/api";
 import { AuthLogin, SinginResponse } from "./auth.type";
 
@@ -30,6 +31,7 @@ export function useAuthProvider() {
   const [user, setUser] = useState(null);
   const cookieData = getCookie(COOKIE_KEY);
   const router = useRouter();
+  const pathname = usePathname();
 
   const login = async (props: AuthLogin) => {
     try {
@@ -75,6 +77,9 @@ export function useAuthProvider() {
   // Pull user data from API
   const loadUser = async () => {
     try {
+      if (excludePaths.includes(pathname)) {
+        return;
+      }
       if (!cookieData) {
         router.push("/login");
         return;

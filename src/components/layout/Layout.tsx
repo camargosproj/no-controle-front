@@ -10,7 +10,7 @@ type LayoutProps = {
     children: ReactNode;
 };
 
-const excludePaths = ["/login", "/register"];
+export const excludePaths = ["/login", "/register", "/register/validate"];
 
 const Layout = ({ children }: LayoutProps) => {
     const pathname = usePathname();
