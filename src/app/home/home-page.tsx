@@ -12,7 +12,7 @@ const HomePage = ({ month, year }: SummaryResponse) => {
                 <div className={`flex gap-6 p-2 w-full flex-col sm:flex-row`}>
                     <Widget type="income" data={{ description: 'Rendimentos', amount: month.totalIncome }} />
                     <Widget type="expense" data={{ description: 'Despesas', amount: month.totalExpense }} />
-                    <Widget type="balance" data={{ description: 'Saldo', amount: month.totalBalance }} />
+                    <Widget type="balance" data={{ description: 'Saldo', amount: month.totalBalance }} isClickable={false} />
                 </div>
 
 

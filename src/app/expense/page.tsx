@@ -35,14 +35,15 @@ async function getExpenses(query: ServerSideProps) {
 const Expense = async (props: ServerSideProps) => {
     const { balance, expenses } = await getExpenses(props.searchParams);
     return (
-        <div className="flex p-4 gap-2">
+        <div className="flex p-4 gap-2 flex-col sm:flex-row">
             <SidePanel {...balance} />
-            <div className={"flex flex-1 flex-col gap-3"}>
+            <div className={"flex flex-1 flex-col gap-3  text-xs sm:text-base"}>
                 <TableHead />
                 {expenses.map((expense: Expense, index: number) => (
                     <TableItem key={index} data={expense} />
                 ))}
             </div>
+            {/* <BasicTable /> */}
         </div>
     );
 };

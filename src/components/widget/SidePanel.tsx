@@ -19,7 +19,7 @@ const SidePanel = ({ totalBalance, totalExpense, totalIncome }: SidePanelProps) 
             <Filter />
             <Widget type="expense" data={{ description: 'Despesas', amount: totalExpense }} />
             <Widget type="income" data={{ description: 'Rendimentos', amount: totalIncome }} />
-            <Widget type="balance" data={{ description: 'Saldo', amount: totalBalance }} />
+            <Widget type="balance" data={{ description: 'Saldo', amount: totalBalance }} isClickable={false} />
         </div>
     )
 }

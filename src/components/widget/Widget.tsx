@@ -1,7 +1,6 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-import Link from "next/link";
 import { BiWalletAlt } from "react-icons/bi";
 import { MdPaid } from "react-icons/md";
 import { createQueryString } from "../../services/util";
@@ -14,9 +13,10 @@ type WidgetData = {
         link?: string;
         icon?: JSX.Element;
     };
+    isClickable?: boolean;
 };
 
-const Widget = ({ type, data }: WidgetData) => {
+const Widget = ({ type, data, isClickable = true }: WidgetData) => {
     const pathname = usePathname();
     const query = useSearchParams();
 
@@ -73,9 +73,9 @@ const Widget = ({ type, data }: WidgetData) => {
 
     return (
         <div
-            className={`flex  shadow-md hover:bg-secondary  rounded-md justify-between p-4 w-full ${type === pathname.replace("/", "") ? "bg-secondary" : "cursor-pointer"
+            className={`flex  shadow-md ${isClickable && "hover:bg-secondary"}   rounded-md justify-between p-4 w-full ${type === pathname.replace("/", "") ? "bg-secondary" : "cursor-pointer"
                 }`}
-            onClick={() => push(data.link)}
+            onClick={() => isClickable ? push(data.link) : null}
         >
             <div className={`flex justify-between flex-col text-primary`}>
                 <span>{data.description}</span>
@@ -85,9 +85,7 @@ const Widget = ({ type, data }: WidgetData) => {
                         currency: "BRL",
                     })}
                 </span>
-                <Link href={data.link as string}>
-                    <span>Ver mais</span>
-                </Link>
+
             </div>
             <div className={`flex flex-col gap-2`}>
                 <div className={`text-green-500`}>

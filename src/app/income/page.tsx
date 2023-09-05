@@ -33,10 +33,10 @@ async function getIncomes(query) {
 const Income = async (props: ServerSideProps) => {
     const { balance, incomes } = await getIncomes(props.searchParams);
     return (
-        <div className="flex p-4 gap-2">
+        <div className="flex p-4 gap-2 flex-col sm:flex-row">
             <SidePanel {...balance} />
 
-            <div className={"flex flex-1 flex-col gap-3"}>
+            <div className={"flex flex-1 flex-col gap-3 text-xs sm:text-base"}>
                 <TableHead />
                 {incomes &&
                     incomes.map((income, index) => (
