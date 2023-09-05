@@ -54,7 +54,6 @@ type FormValues = {
     category: string;
 };
 
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const AddWidget = ({ type }: AddWidgetProps) => {
     const [categories, setCategories] = useState<any>([]);

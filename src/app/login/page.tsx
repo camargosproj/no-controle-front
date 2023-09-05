@@ -7,7 +7,7 @@ import { useAuth } from "../../services/contexts/useAuth";
 const Login = () => {
     const auth = useAuth();
 
-    const { register, handleSubmit } = useForm();
+    const { register, handleSubmit, formState } = useForm();
 
     const handleLogin = (data: { email: string; password: string }) => {
         auth.login(data);
@@ -48,6 +48,8 @@ const Login = () => {
                 <button
                     type="submit"
                     className="bg-primary w-full hover:bg-secondary text-white hover:text-primary px-4 py-2 rounded-md"
+                    disabled={formState.isSubmitting}
+
                 >
                     Entrar
                 </button>

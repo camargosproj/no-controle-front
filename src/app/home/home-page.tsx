@@ -1,10 +1,11 @@
-'use client'
+"use client";
 import SimpleCharts from "../../components/chart/BarChart";
 import Widget from "../../components/widget/Widget";
 import { SummaryResponse } from "./home.type";
 
 
 const HomePage = ({ month, year }: SummaryResponse) => {
+
     return (
         <div className={`flex pr-3 pl-3 w-full h-full`}>
             <div className={`flex flex-col w-full`}>

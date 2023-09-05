@@ -29,11 +29,7 @@ const Loading = () => {
             </div>
         </div>
     )
-    // return (
-    //     <Box className={`flex justify-center items-center w-full h-full`}>
-    //         <CircularProgress className={`flex text-primary`} />
-    //     </Box>
-    // )
+
 }
 
 export default Loading

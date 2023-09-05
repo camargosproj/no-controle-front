@@ -67,6 +67,7 @@ export function useAuthProvider() {
     apiClientInstance.defaults.headers.Authorization = null;
     apiClient.defaults.headers.Authorization = null;
     router.push("/login");
+    router.refresh();
   };
 
   // Store login token / user data in cookie

@@ -1,24 +1,15 @@
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import TableHead from "../../components/shared/table/TableHead";
 import TableItem from "../../components/shared/table/TableItem";
 import SidePanel from "../../components/widget/SidePanel";
 import { default as apiClientInstance } from "../../services/api-client/api";
-import { COOKIE_KEY } from "../../services/config";
+import { parseServerCookies } from "../../services/util/server-side-utils";
 import { ServerSideProps } from "../../types";
 import { Expense } from "./types.expenses";
 
 
 
-async function getExpenses(query) {
-
-    const getCookie = cookies();
-
-    const cookie = getCookie.get(COOKIE_KEY)?.value;
-    if (!cookie) {
-        redirect("/login");
-    }
-    const cookieData = JSON.parse(cookie);
+async function getExpenses(query: ServerSideProps) {
+    const cookieData = parseServerCookies();
     const apiClient = apiClientInstance(cookieData);
     const { data } = await apiClient.get("/expense", {
         params: query,

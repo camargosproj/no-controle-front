@@ -1,20 +1,15 @@
-import { cookies } from "next/headers";
 import apiClientInstance from "../services/api-client/api";
-import { COOKIE_KEY } from "../services/config";
 
-import { redirect } from "next/navigation";
+import { parseServerCookies } from "../services/util/server-side-utils";
 import HomePage from "./home/home-page";
 
-async function getBalance() {
-    const getCookie = cookies();
 
-    const cookie = getCookie.get(COOKIE_KEY)?.value;
-    if (!cookie) {
-        redirect("/login");
-    }
-    const cookieData = JSON.parse(cookie);
+
+async function getBalance() {
+    const cookieData = parseServerCookies()
     const apiClient = apiClientInstance(cookieData);
     const { data } = await apiClient.get("/auth/user/summary");
+
     return data;
 }
 

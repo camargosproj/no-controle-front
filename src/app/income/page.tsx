@@ -1,21 +1,13 @@
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import TableHead from "../../components/shared/table/TableHead";
 import TableItem from "../../components/shared/table/TableItem";
 import SidePanel from "../../components/widget/SidePanel";
 import { default as apiClientInstance } from "../../services/api-client/api";
-import { COOKIE_KEY } from "../../services/config";
+import { parseServerCookies } from "../../services/util/server-side-utils";
 import { ServerSideProps } from "../../types";
 import { Income } from "./types.incomes";
 
 async function getIncomes(query) {
-    const getCookie = cookies();
-
-    const cookie = getCookie.get(COOKIE_KEY)?.value;
-    if (!cookie) {
-        redirect("/login");
-    }
-    const cookieData = JSON.parse(cookie);
+    const cookieData = parseServerCookies();
     const apiClient = apiClientInstance(cookieData);
     const { data } = await apiClient.get("/income", {
         params: query,
