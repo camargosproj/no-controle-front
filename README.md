@@ -2,7 +2,7 @@
 
 ## Overview
 
-`nocontrole` is a financial management system designed to help individuals and businesses manage their financial details efficiently. It provides a user-friendly interface for tracking expenses, income, and other financial transactions.
+`Nocontrole` is a financial management system designed to help individuals and businesses manage their financial details efficiently. It provides a user-friendly interface for tracking expenses, income, and other financial transactions.
 
 ## Core Dependencies
 
