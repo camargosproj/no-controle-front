@@ -40,7 +40,7 @@ const Income = async (props: ServerSideProps) => {
                 <TableHead />
                 {incomes &&
                     incomes.map((income, index) => (
-                        <TableItem key={index} data={income} />
+                        <TableItem type="income" key={index} data={income} />
                     ))}
             </div>
         </div>

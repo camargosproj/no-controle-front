@@ -2,11 +2,12 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { BiWalletAlt } from "react-icons/bi";
+import { IoCheckmarkDoneCircleOutline } from "react-icons/io5";
 import { MdPaid } from "react-icons/md";
 import { createQueryString } from "../../services/util";
 
 type WidgetData = {
-    type: 'income' | 'expense' | 'balance';
+    type: 'income' | 'expense' | 'balance' | 'paid';
     data: {
         description: string;
         amount: number;
@@ -66,6 +67,16 @@ const Widget = ({ type, data, isClickable = true }: WidgetData) => {
                 ),
             };
             break;
+        case "paid":
+            data = {
+                ...data,
+                link: "/paid",
+                icon: (
+                    <IoCheckmarkDoneCircleOutline className={`text-primary text-6xl md:text-3xl`} />
+
+                ),
+            };
+            break;
         default:
             break;
     }
@@ -73,13 +84,13 @@ const Widget = ({ type, data, isClickable = true }: WidgetData) => {
 
     return (
         <div
-            className={`flex  shadow-md ${isClickable && "hover:bg-secondary"}   rounded-md justify-between p-4 w-full ${type === pathname.replace("/", "") ? "bg-secondary" : "cursor-pointer"
+            className={`flex shadow-md ${isClickable && "hover:bg-secondary"}   rounded-md justify-between p-4 w-full ${type === pathname.replace("/", "") ? "bg-secondary" : "cursor-pointer"
                 }`}
             onClick={() => isClickable ? push(data.link) : null}
         >
             <div className={`flex justify-between flex-col text-primary`}>
                 <span>{data.description}</span>
-                <span className={`${data.amount.toString().startsWith('-') ? 'text-red-600' : 'text-green-500'}`}>
+                <span className={`${data.amount?.toString().startsWith('-') ? 'text-red-600' : 'text-green-500'}`}>
                     {Number(data.amount).toLocaleString("pt-BR", {
                         style: "currency",
                         currency: "BRL",
@@ -87,11 +98,7 @@ const Widget = ({ type, data, isClickable = true }: WidgetData) => {
                 </span>
 
             </div>
-            <div className={`flex flex-col gap-2`}>
-                <div className={`text-green-500`}>
-                    {/* <KeyboardArrowDown /> */}
-                    20%
-                </div>
+            <div className={`flex flex-col justify-center gap-2`}>
                 {data.icon}
             </div>
         </div>

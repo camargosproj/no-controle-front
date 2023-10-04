@@ -40,7 +40,7 @@ const Expense = async (props: ServerSideProps) => {
             <div className={"flex flex-1 flex-col gap-3  text-xs sm:text-base"}>
                 <TableHead />
                 {expenses.map((expense: Expense, index: number) => (
-                    <TableItem key={index} data={expense} />
+                    <TableItem type="expense" key={index} data={expense} />
                 ))}
             </div>
             {/* <BasicTable /> */}

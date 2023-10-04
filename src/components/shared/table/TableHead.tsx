@@ -5,7 +5,7 @@ const TableHead = () => (
             <h1>Data</h1>
             <h1>Categoria</h1>
             <h1>Valor</h1>
-            <h1>Ver Mais</h1>
+            <h1>Alterar</h1>
         </div>
     </div>
 )
