@@ -16,8 +16,8 @@ export type TableItemProps = {
         category: {
             name: string;
         };
-        paymentDate?: string | null;
-        receivedDate?: string | null;
+        paidAt?: string | null;
+        receivedAt?: string | null;
         amount: number;
         link?: string;
     };
@@ -29,7 +29,7 @@ const TableItem = ({ data, type }: TableItemProps) => {
     const cookies = parseCookie();
     const apiClient = apiClientInstance(cookies);
     const router = useRouter();
-    let isPaid = data?.paymentDate || data?.receivedDate;
+    let isPaid = data?.paidAt || data?.receivedAt;
 
 
 
@@ -42,12 +42,12 @@ const TableItem = ({ data, type }: TableItemProps) => {
             if (type === 'income') {
 
                 requestData = {
-                    receivedDate: data.receivedDate ? null : new Date(),
+                    receivedAt: data.receivedAt ? null : new Date(),
                 }
 
             } else if (type === 'expense') {
                 requestData = {
-                    paymentDate: data.paymentDate ? null : new Date(),
+                    paidAt: data.paidAt ? null : new Date(),
                 }
             }
 
