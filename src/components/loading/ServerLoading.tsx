@@ -9,7 +9,9 @@ const ServerLoading = () => {
                 ...{
                     totalBalance: 0,
                     totalExpense: 0,
-                    totalIncome: 0
+                    totalIncome: 0,
+                    paidExpenses: 0,
+                    receivedIncomes: 0,
                 }
             } />
 
