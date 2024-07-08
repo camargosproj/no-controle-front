@@ -15,12 +15,14 @@ type SidePanelProps = {
 
 const SidePanel = ({ totalBalance, totalExpense, totalIncome, paidExpenses, receivedIncomes }: SidePanelProps) => {
     const pathname = usePathname();
+    const pageType = pathname.replace('/', '') as "income" | "expense"
     return (
         <div className="min-w-[8.25rem]  sm:min-w-[11.25rem] sm:max-w-[13%] gap-4 flex flex-col">
-            <AddWidget type={pathname.replace('/', '') as "income" | "expense"} />
+            <AddWidget type={pageType} />
             <Filter />
             <Widget type="expense" data={{ description: 'Despesas', amount: totalExpense }} />
             <Widget type="income" data={{ description: 'Rendimentos', amount: totalIncome }} />
+            <Widget type="paid" data={{ description: 'Recebido', amount: receivedIncomes}} isClickable={false} />
             <Widget type="paid" data={{ description: 'Pago', amount: paidExpenses }} isClickable={false} />
             <Widget type="balance" data={{ description: 'Saldo', amount: totalBalance }} isClickable={false} />
         </div>
