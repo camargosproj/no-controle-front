@@ -16,11 +16,7 @@ async function getIncomes(query) {
     const incomes = data.data.map((income: Income) => {
         return {
             ...income,
-            date: new Date(income.date).toLocaleDateString("pt-BR", {
-                day: "2-digit",
-                month: "long",
-                year: "numeric",
-            }),
+
             link: `/income/${income.id}`,
         };
     });
