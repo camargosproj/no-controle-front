@@ -1,4 +1,6 @@
 "use client";
+import { Expense } from "@/app/expense/types.expenses";
+import { Income } from "@/app/income/types.incomes";
 import {
   Button,
   FormControl,
@@ -14,10 +16,9 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs, { Dayjs } from "dayjs";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
-import { IoMdAddCircleOutline } from "react-icons/io";
 import { toast } from "react-toastify";
 import apiClientInstance from "../../services/api-client/api";
 import { parseCookie } from "../../services/util";
@@ -40,38 +41,56 @@ const categoryType = {
   expense: "Despesas",
 };
 
-type AddWidgetProps = {
+type EditWidgetProps = {
+  data: Expense & Income;
   type: "income" | "expense";
 };
 
 type FormValues = {
+  id: string;
   description: string;
   amount: string;
   date: string;
   category: string;
 };
 
-const AddWidget = ({ type }: AddWidgetProps) => {
+const EditWidget = ({ type, data }: EditWidgetProps) => {
   const [categories, setCategories] = useState<any>([]);
   const [isPending, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
-  const [date, setDate] = useState<Dayjs | null>(dayjs());
+  const [date, setDate] = useState<Dayjs | null>(() => {
+    let date = dayjs(data.date);
+
+    const localOffset = date.utcOffset() * 60 * 1000;
+
+    date = date.subtract(localOffset, "millisecond");
+
+    return date;
+  });
   const cookies = parseCookie();
   const apiClient = apiClientInstance(cookies);
-  const query = useSearchParams();
   const router = useRouter();
-  const month = query.get("month");
-  const year = query.get("year");
 
-  const { register, handleSubmit, reset, setValue, formState } = useForm();
+  const { register, handleSubmit, reset, setValue, formState } = useForm({
+    defaultValues: {
+      id: data.id,
+      description: data.description,
+      amount: data.amount.toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+      }),
+      date: data.date,
+      categoryId: data.categoryId,
+    },
+  });
   const onSubmit = async (data: FormValues) => {
     try {
       // remove non-numeric characters from the input and corvert it to a decimal number
       const convertedAmount = parseFloat(data.amount.replace(/\D/g, "")) / 100;
 
-      await apiClient.post(`/${type}`, {
+      await apiClient.patch(`/${type}/${data.id}`, {
         ...data,
-        date,
+        date: date?.format("YYYY-MM-DD"),
         amount: convertedAmount,
       });
       startTransition(() => {
@@ -105,15 +124,6 @@ const AddWidget = ({ type }: AddWidgetProps) => {
   const handleClose = () => {
     setOpen(false);
     reset();
-    handleChangeDate();
-  };
-
-  const handleChangeDate = () => {
-    if (month && year) {
-      setDate(dayjs(`${month}-${year}`));
-    } else {
-      setDate(dayjs());
-    }
   };
 
   const handleCurrencyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -137,10 +147,6 @@ const AddWidget = ({ type }: AddWidgetProps) => {
     setValue("amount", formattedCurrency);
   };
 
-  useEffect(() => {
-    handleChangeDate();
-  }, [month, year]);
-
   const initialized = useRef(false);
   useEffect(() => {
     if (!initialized.current) {
@@ -150,11 +156,8 @@ const AddWidget = ({ type }: AddWidgetProps) => {
     }
   }, [type]);
   return (
-    <div className="bg-slate-50  rounded-md shadow-md cursor-pointer text-primary h-16 w-full flex justify-center content-center flex-wrap">
-      <IoMdAddCircleOutline
-        className="p-2 text-4xl w-full h-full text-primary"
-        onClick={handleOpen}
-      />
+    <div className="w-full">
+      <p onClick={handleOpen}>Editar</p>
       <Modal
         open={open}
         onClose={handleClose}
@@ -204,10 +207,7 @@ const AddWidget = ({ type }: AddWidgetProps) => {
                     {...register("date", {
                       required: true,
                     })}
-                    onChange={(newValue: Dayjs) => {
-                      setDate(newValue);
-                      setValue("date", newValue);
-                    }}
+                    onChange={(newValue: Dayjs) => setDate(newValue)}
                   />
                 </LocalizationProvider>
               </FormControl>
@@ -218,7 +218,7 @@ const AddWidget = ({ type }: AddWidgetProps) => {
                 <Select
                   labelId="demo-simple-select-standard-label"
                   id="demo-simple-select-standard"
-                  defaultValue={""}
+                  defaultValue={data.categoryId}
                   label="Categoria"
                   {...register("categoryId", {
                     required: true,
@@ -253,4 +253,4 @@ const AddWidget = ({ type }: AddWidgetProps) => {
   );
 };
 
-export default AddWidget;
+export default EditWidget;

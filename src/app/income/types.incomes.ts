@@ -6,6 +6,9 @@ export type Income = {
   categoryId: string;
   userId: string;
   transactionGroupId: string;
+  paidAt : string | null;
+  updatedAt: string;
+	createdAt: string;
   category: {
     name: string;
   };

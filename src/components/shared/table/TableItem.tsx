@@ -1,4 +1,7 @@
 "use client";
+import { Expense } from "@/app/expense/types.expenses";
+import { Income } from "@/app/income/types.incomes";
+import EditWidget from "@/components/widget/EditWidget";
 import { MenuItem } from "@mui/material";
 import Button from "@mui/material/Button";
 import Menu, { MenuProps } from "@mui/material/Menu";
@@ -11,20 +14,14 @@ import { parseCookie } from "../../../services/util";
 import styles from "./widget.module.css";
 
 export type TableItemProps = {
-  data: {
-    id: string;
-    description: string;
-    date: string;
-    category: {
-      name: string;
-    };
-    paidAt?: string | null;
-    receivedAt?: string | null;
-    amount: number;
-    link?: string;
-  };
+  data: Expense & Income;
   type: "income" | "expense";
 };
+
+export type MenuOptionsProps = {
+  handlePayment: () => void;
+  handleDelete: () => void;
+} & TableItemProps;
 
 const TableItem = ({ data, type }: TableItemProps) => {
   const cookies = parseCookie();
@@ -82,6 +79,7 @@ const TableItem = ({ data, type }: TableItemProps) => {
           day: "2-digit",
           month: "long",
           year: "numeric",
+          timeZone: "UTC",
         })}
       </span>
       <span className={styles.title}>{data?.category.name}</span>
@@ -95,6 +93,8 @@ const TableItem = ({ data, type }: TableItemProps) => {
         <MenuOptions
           handlePayment={handlePayment}
           handleDelete={handleDelete}
+          data={data}
+          type={type}
         />
       </div>
     </div>
@@ -145,7 +145,12 @@ const StyledMenu = styled((props: MenuProps) => (
   },
 }));
 
-function MenuOptions({ handlePayment, handleDelete }) {
+function MenuOptions({
+  handlePayment,
+  handleDelete,
+  data,
+  type,
+}: MenuOptionsProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -178,7 +183,7 @@ function MenuOptions({ handlePayment, handleDelete }) {
       >
         <MenuItem disableRipple>
           {/* <EditIcon /> */}
-          Editar
+          <EditWidget data={data} type={type} />
         </MenuItem>
         <MenuItem
           onClick={() => {

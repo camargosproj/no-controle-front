@@ -16,7 +16,6 @@ async function getExpenses(query: ServerSideProps) {
   const expenses = data.data.map((expense: Expense) => {
     return {
       ...expense,
-      link: `/expense/${expense.id}`,
     };
   });
   return {

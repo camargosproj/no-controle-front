@@ -16,7 +16,6 @@ async function getIncomes(query) {
   const incomes = data.data.map((income: Income) => {
     return {
       ...income,
-      link: `/income/${income.id}`,
     };
   });
   return {

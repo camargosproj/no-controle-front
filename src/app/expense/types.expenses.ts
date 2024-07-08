@@ -6,6 +6,9 @@ export type Expense = {
   categoryId: string;
   userId: string;
   transactionGroupId: string;
+  receivedAt : string | null
+  updatedAt: string;
+	createdAt: string;
   category: {
     name: string;
   };
