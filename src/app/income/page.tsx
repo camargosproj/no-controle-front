@@ -16,6 +16,11 @@ async function getIncomes(query) {
     const incomes = data.data.map((income: Income) => {
         return {
             ...income,
+            date: new Date(income.date).toLocaleDateString("pt-BR", {
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+            }),
 
             link: `/income/${income.id}`,
         };
@@ -26,7 +31,7 @@ async function getIncomes(query) {
     };
 }
 
-const Income = async (props: ServerSideProps) => {
+const IncomePage = async (props: ServerSideProps) => {
     const { balance, incomes } = await getIncomes(props.searchParams);
     return (
         <div className="flex p-4 gap-2 flex-col sm:flex-row">
@@ -35,7 +40,7 @@ const Income = async (props: ServerSideProps) => {
             <div className={"flex flex-1 flex-col gap-3 text-xs sm:text-base"}>
                 <TableHead />
                 {incomes &&
-                    incomes.map((income, index) => (
+                    incomes.map((income : Income, index : number) => (
                         <TableItem type="income" key={index} data={income} />
                     ))}
             </div>
@@ -43,4 +48,4 @@ const Income = async (props: ServerSideProps) => {
     );
 };
 
-export default Income;
+export default IncomePage;
