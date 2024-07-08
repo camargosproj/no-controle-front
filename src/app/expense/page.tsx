@@ -26,7 +26,7 @@ async function getExpenses(query: ServerSideProps) {
   };
 }
 
-const Expense = async (props: ServerSideProps) => {
+const ExpensePage = async (props: ServerSideProps) => {
   const { balance, expenses } = await getExpenses(props.searchParams);
   return (
     <div className="flex p-4 gap-2 flex-col sm:flex-row">
@@ -41,4 +41,4 @@ const Expense = async (props: ServerSideProps) => {
   );
 };
 
-export default Expense;
+export default ExpensePage;
