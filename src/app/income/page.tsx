@@ -7,45 +7,39 @@ import { ServerSideProps } from "../../types";
 import { Income } from "./types.incomes";
 
 async function getIncomes(query) {
-    const cookieData = parseServerCookies();
-    const apiClient = apiClientInstance(cookieData);
-    const { data } = await apiClient.get("/income", {
-        params: query,
-    });
+  const cookieData = parseServerCookies();
+  const apiClient = apiClientInstance(cookieData);
+  const { data } = await apiClient.get("/income", {
+    params: query,
+  });
 
-    const incomes = data.data.map((income: Income) => {
-        return {
-            ...income,
-            date: new Date(income.date).toLocaleDateString("pt-BR", {
-                day: "2-digit",
-                month: "long",
-                year: "numeric",
-            }),
-
-            link: `/income/${income.id}`,
-        };
-    });
+  const incomes = data.data.map((income: Income) => {
     return {
-        incomes,
-        balance: data.balance,
+      ...income,
+      link: `/income/${income.id}`,
     };
+  });
+  return {
+    incomes,
+    balance: data.balance,
+  };
 }
 
 const IncomePage = async (props: ServerSideProps) => {
-    const { balance, incomes } = await getIncomes(props.searchParams);
-    return (
-        <div className="flex p-4 gap-2 flex-col sm:flex-row">
-            <SidePanel {...balance} />
+  const { balance, incomes } = await getIncomes(props.searchParams);
+  return (
+    <div className="flex p-4 gap-2 flex-col sm:flex-row">
+      <SidePanel {...balance} />
 
-            <div className={"flex flex-1 flex-col gap-3 text-xs sm:text-base"}>
-                <TableHead />
-                {incomes &&
-                    incomes.map((income : Income, index : number) => (
-                        <TableItem type="income" key={index} data={income} />
-                    ))}
-            </div>
-        </div>
-    );
+      <div className={"flex flex-1 flex-col gap-3 text-xs sm:text-base"}>
+        <TableHead />
+        {incomes &&
+          incomes.map((income: Income, index: number) => (
+            <TableItem type="income" key={index} data={income} />
+          ))}
+      </div>
+    </div>
+  );
 };
 
 export default IncomePage;

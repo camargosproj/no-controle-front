@@ -77,7 +77,13 @@ const TableItem = ({ data, type }: TableItemProps) => {
       }`}
     >
       <span className={styles.title}>{data.description}</span>
-      <span className={styles.counter}>{data.date}</span>
+      <span className={styles.counter}>
+        {new Date(data.date).toLocaleDateString("pt-BR", {
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
+        })}
+      </span>
       <span className={styles.title}>{data?.category.name}</span>
       <span className={styles.counter}>
         {Number(data.amount).toLocaleString("pt-BR", {

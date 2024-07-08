@@ -17,7 +17,6 @@ type WidgetData = {
 };
 
 const Widget = ({ type, data, isClickable = true }: WidgetData) => {
-  console.log(data);
   const pathname = usePathname();
   const query = useSearchParams();
 

@@ -16,11 +16,6 @@ async function getExpenses(query: ServerSideProps) {
   const expenses = data.data.map((expense: Expense) => {
     return {
       ...expense,
-      date: new Date(expense.date).toLocaleDateString("pt-BR", {
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
-    }),
       link: `/expense/${expense.id}`,
     };
   });
