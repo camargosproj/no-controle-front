@@ -33,7 +33,7 @@ const IncomePage = async (props: ServerSideProps) => {
       <div className={"flex flex-1 flex-col gap-3 text-xs sm:text-base"}>
         <TableHead />
         {incomes &&
-          incomes.map((income: Income, index: number) => (
+          incomes.map((income: any, index: number) => (
             <TableItem type="income" key={index} data={income} />
           ))}
       </div>

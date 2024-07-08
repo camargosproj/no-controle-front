@@ -242,7 +242,7 @@ const EditWidget = ({ type, data }: EditWidgetProps) => {
                   variant="contained"
                   disabled={formState.isSubmitting || isPending}
                 >
-                  Adicionar
+                  Atualizar
                 </Button>
               </Box>
             </form>

@@ -31,7 +31,7 @@ const ExpensePage = async (props: ServerSideProps) => {
       <SidePanel {...balance} />
       <div className={"flex flex-1 flex-col gap-3  text-xs sm:text-base"}>
         <TableHead />
-        {expenses.map((expense: Expense, index: number) => (
+        {expenses.map((expense: any, index: number) => (
           <TableItem type="expense" key={index} data={expense} />
         ))}
       </div>
