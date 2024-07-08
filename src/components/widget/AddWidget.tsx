@@ -19,7 +19,6 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { toast } from "react-toastify";
-// import { apiClient } from "../../services/api-client/apiClient";
 import apiClientInstance from "../../services/api-client/api";
 import { parseCookie } from "../../services/util";
 import Loading from "../loading/Loading";
@@ -72,10 +71,15 @@ const AddWidget = ({ type }: AddWidgetProps) => {
     const { register, handleSubmit, reset, setValue, formState } = useForm();
     const onSubmit = async (data: FormValues) => {
         try {
+
+            // remove non-numeric characters from the input and corvert it to a decimal number
+            const convertedAmount = parseFloat(data.amount.replace(/\D/g, "")) / 100;
+
+        
             await apiClient.post(`/${type}`, {
                 ...data,
                 date,
-                amount: parseFloat(data.amount),
+                amount: convertedAmount,
             });
             startTransition(() => {
                 handleClose();
@@ -117,6 +121,27 @@ const AddWidget = ({ type }: AddWidgetProps) => {
         } else {
             setDate(dayjs());
         }
+    };
+
+    const handleCurrencyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        // Remove non-numeric characters from the input
+        const rawValue = e.target.value.replace(/\D/g, "");
+
+        // Convert to a number
+        const numericValue = parseFloat(rawValue) / 100; // Assuming input is in cents
+
+        if (isNaN(numericValue)) {
+            setValue("amount", "");
+            return;
+        }
+
+        // Format as currency (Real)
+        const formattedCurrency = numericValue.toLocaleString("pt-BR", {
+            style: "currency",
+            currency: "BRL",
+        });
+
+        setValue("amount", formattedCurrency);
     };
 
     useEffect(() => {
@@ -164,16 +189,13 @@ const AddWidget = ({ type }: AddWidgetProps) => {
                                 />
                             </FormControl>
                             <FormControl fullWidth sx={{ m: 1 }} variant="standard">
-                                <InputLabel htmlFor="standard-adornment-amount">
-                                    Valor
-                                </InputLabel>
+                                <InputLabel htmlFor="standard-adornment-amount">Valor</InputLabel>
                                 <Input
                                     id="standard-adornment-amount"
-                                    startAdornment={
-                                        <InputAdornment position="start">$</InputAdornment>
-                                    }
+                                    placeholder="R$ 0,00"
                                     {...register("amount", {
                                         required: true,
+                                        onChange: handleCurrencyChange,
                                     })}
                                 />
                             </FormControl>
@@ -183,7 +205,7 @@ const AddWidget = ({ type }: AddWidgetProps) => {
                                     dateAdapter={AdapterDayjs}
                                 >
                                     <DatePicker
-                                        label="Data"
+                                        label="Data de vencimento"
                                         value={date}
                                         {...register("date", {
                                             required: true,
