@@ -1,6 +1,7 @@
 "use client";
 import { Expense } from "@/app/expense/types.expenses";
 import { Income } from "@/app/income/types.incomes";
+import CopyWidget from "@/components/widget/CopyWidget";
 import EditWidget from "@/components/widget/EditWidget";
 import { MenuItem } from "@mui/material";
 import Button from "@mui/material/Button";
@@ -185,16 +186,7 @@ function MenuOptions({
           {/* <EditIcon /> */}
           <EditWidget data={data} type={type} />
         </MenuItem>
-        <MenuItem
-          onClick={() => {
-            handleDelete();
-            handleClose();
-          }}
-          disableRipple
-        >
-          {/* <EditIcon /> */}
-          Excluir
-        </MenuItem>
+
         <MenuItem
           onClick={() => {
             handlePayment();
@@ -207,7 +199,17 @@ function MenuOptions({
         </MenuItem>
         <MenuItem disableRipple>
           {/* <FileCopyIcon /> */}
-          Duplicar
+          <CopyWidget data={data} type={type} />
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleDelete();
+            handleClose();
+          }}
+          disableRipple
+        >
+          {/* <EditIcon /> */}
+          Excluir
         </MenuItem>
       </StyledMenu>
     </div>
