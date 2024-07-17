@@ -71,7 +71,7 @@ const AddWidget = ({ type }: AddWidgetProps) => {
 
       await apiClient.post(`/${type}`, {
         ...data,
-        date,
+        date: date?.format("YYYY-MM-DD"),
         amount: convertedAmount,
       });
       startTransition(() => {
